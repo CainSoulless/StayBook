@@ -1,0 +1,9 @@
+<div class="container mt-5">
+    <h1>Confirmar eliminación</h1>
+    <p>¿Estás seguro de que deseas eliminar la habitación "{{ habitacion.habitacion_numero }}"?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'habitacion_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

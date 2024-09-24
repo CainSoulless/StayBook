@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Clientes</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Lista de Clientes</h1>
+        <a href="{% url 'cliente_create' %}" class="btn btn-primary">Nuevo Cliente</a>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.cliente_nombre }}</td>
+                    <td>{{ cliente.cliente_apellidos }}</td>
+                    <td>{{ cliente.cliente_email }}</td>
+                    <td>{{ cliente.cliente_telefono }}</td>
+                    <td>
+                        <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-warning">Editar</a>
+                        <a href="{% url 'cliente_delete' cliente.pk %}" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
