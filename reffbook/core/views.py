@@ -2,6 +2,27 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Cliente, Habitacion, Reserva
 from .forms import ClienteForm, HabitacionForm, ReservaForm
 
+
+def landing (request):
+    return render (request, 'core/landing.html')
+
+def inicio_sesion(request):
+    return render(request, 'core/inicio_sesion.html')
+
+def registro(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()  
+            return redirect('inicio_sesion')
+    else:
+        form = ClienteForm()
+
+    return render(request, 'core/registro.html', {'form': form})
+
+def home_cliente(request):
+    return render(request, 'core/home_cliente.html' )
+
 # Vista para listar habitaciones
 def habitacion_list(request):
     habitaciones = Habitacion.objects.all()

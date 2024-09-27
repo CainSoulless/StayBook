@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+</head>
+<body>
+    <div class="container">
+        <img src="{% static 'img/reffbook_logo.png' %}" alt="Reffbook Logo">
+        <h1> Bienvenidos </h1>
+        <h3> Seleccione su idioma / Select your lenguaje </h3>
+        <a href="{% url 'inicio_sesion' %}">
+            <img class='img_idioma' src="{% static 'img/idioma_espanol.png' %}" alt="idioma español">
+        </a>
+            <img class='img_idioma' src="{% static 'img/idioma_ingles.png' %}" alt="idioma inglés">
+    </div>
+</body>
+</html>

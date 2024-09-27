@@ -22,7 +22,7 @@ class Cliente(models.Model):
     cliente_apellidos = models.CharField(max_length=100)
     cliente_email = models.EmailField(max_length=150)
     cliente_telefono = models.CharField(max_length=15)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return f'{self.cliente_nombre} {self.cliente_apellidos}'
