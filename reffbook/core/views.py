@@ -21,9 +21,9 @@ def inicio_sesion(request):
                 if usuario.usuario_tipo == 'administrador':
                     return redirect('admin_home')
                 elif usuario.usuario_tipo == 'cliente':
-                    return redirect('home_cliente')
+                    return redirect('cliente_home')
                 elif usuario.usuario_tipo == 'empleado':
-                    return redirect('home_cliente')
+                    return redirect('admin_home')
             else:
                 messages.error(request, 'Contraseña incorrecta')
         except Usuario.DoesNotExist:
@@ -42,8 +42,20 @@ def registro(request):
 
     return render(request, 'core/registro.html', {'form': form})
 
+def cliente_home(request):
+    return render(request, 'core/cliente_home.html')
+
+def historial_reservas(request):
+    return render(request, 'core/historial_reservas.html')
+
+def reserva_habitacion(request):
+    return render(request, 'core/reserva_habitacion.html')
+
+def cliente_datos(request):
+    return render(request, 'core/cliente_datos.html')
+
 def home_cliente(request):
-    return render(request, 'core/home_cliente.html' )
+    return render(request, 'home_cliente.html')
 
 
 # # # # FUNCIONES ADMINISTRADOR

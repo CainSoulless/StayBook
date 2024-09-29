@@ -23,4 +23,9 @@ urlpatterns = [
     path('admin/empleados/nuevo/', views.admin_empleado_create, name='admin_empleado_create'),
     path('admin/empleados/editar/<int:pk>/', views.admin_empleado_update, name='admin_empleado_update'),
     path('admin/empleados/eliminar/<int:pk>/', views.admin_empleado_delete, name='admin_empleado_delete'),
+    path('cliente_home/', views.cliente_home, name='cliente_home'),
+    path('historial_reservas/', views.historial_reservas, name='historial_reservas'),
+    path('reserva_habitacion/', views.reserva_habitacion, name='reserva_habitacion'),
+    path('cliente_datos/', views.cliente_datos, name='cliente_datos'),
+    path('home_cliente/', views.home_cliente, name='home_cliente'),
 ]

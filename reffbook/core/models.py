@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 '''class Usuario(models.Model):        -------> MODIFICAR USUARIO
     USUARIO_TIPOS = [
@@ -20,7 +21,7 @@ class Administrador(models.Model):
     admin_apellidos = models.CharField(max_length=100)
     admin_email = models.EmailField(max_length=150)
     admin_telefono = models.CharField(max_length=15)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return f'{self.admin_nombre} {self.admin_apellidos}'
@@ -30,7 +31,7 @@ class Cliente(models.Model):
     cliente_apellidos = models.CharField(max_length=100)
     cliente_email = models.EmailField(max_length=150)
     cliente_telefono = models.CharField(max_length=15)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return f'{self.cliente_nombre} {self.cliente_apellidos}'
@@ -41,7 +42,7 @@ class Empleado(models.Model):
     empleado_rol = models.CharField(max_length=50)
     empleado_email = models.EmailField(max_length=150)
     empleado_telefono = models.CharField(max_length=15)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return f'{self.empleado_nombre} {self.empleado_apellidos}'
@@ -83,3 +84,17 @@ class Pago(models.Model):
     
     def __str__(self):
         return f'Pago de {self.pago_monto} para {self.reserva}'
+
+class Usuario(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
+    
+class Usuario(models.Model):
+    usuario_nombre = models.CharField(max_length=100)
+    usuario_contrasena = models.CharField(max_length=128)
+    usuario_tipo = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.usuario_nombre

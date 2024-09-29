@@ -1,5 +1,7 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import Cliente, Habitacion, Reserva, Empleado
+
 
 class ClienteForm(forms.ModelForm):
     class Meta:
@@ -20,3 +22,4 @@ class EmpleadoForm(forms.ModelForm):
     class Meta:
         model = Empleado
         fields = ['empleado_nombre', 'empleado_apellidos', 'empleado_rol', 'empleado_email', 'empleado_telefono', 'usuario']
+

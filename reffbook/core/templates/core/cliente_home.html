@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cliente Home</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhv5gt+FryAlI6XYWc9vAuUnVhb4OpLJXD7x53Q6AfaGpccYtn2dqOnOjTHRnk" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/cliente_home.css' %}">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'cliente_home' %}">
+                <img src="{% static 'img/reffbook_logo.png' %}" alt="Reffbook Logo" width="40" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'reserva_habitacion' %}">Hacer Reserva</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'historial_reservas' %}">Historial de Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cliente_datos' %}">Modificar Datos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Bienvenido a Reffbook</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card border-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Hacer nueva reserva</h5>
+                        <p class="card-text">Realiza una nueva reserva de habitación de forma rápida y sencilla.</p>
+                        <a href="{% url 'reserva_habitacion' %}" class="btn btn-primary btn-block">IR</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card border-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Ver historial de reservas</h5>
+                        <p class="card-text">Consulta tus reservas anteriores y revisa los detalles.</p>
+                        <a href="{% url 'historial_reservas' %}" class="btn btn-primary btn-block">IR</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card border-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Modificar datos personales</h5>
+                        <p class="card-text">Actualiza tu información personal para mantenerla al día.</p>
+                        <a href="{% url 'cliente_datos' %}" class="btn btn-primary btn-block">IR</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ksm2V1XAVLt4k38YUD+Qs59VqRVOc1M2IS9LEsOWptwwzvnUq5o2jxN3eYJ0Ab19" crossorigin="anonymous"></script>
+</body>
+</html>
