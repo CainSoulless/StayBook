@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-p-uh%+f&+wtdxh(a6s_s1^0_aat&syf@b2jjd15_4*b9m)ae4x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['reffbook.herokuapp.com', 'localhost']
+
 
 
 # Application definition
