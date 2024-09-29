@@ -1,1 +1,1 @@
-web: gunicorn REFFBOOK.wsgi --log-file -
+web: gunicorn reffbook.wsgi --log-file -
