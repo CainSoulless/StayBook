@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Administrador - Home</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Bienvenido, Administrador</h1>
+        <p>Selecciona una de las siguientes opciones para administrar el sistema:</p>
+
+        <div class="row">
+            <div class="col-md-3">
+                <a href="{% url 'admin_habitacion_list' %}" class="btn btn-primary btn-block">Administrar Habitaciones</a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'admin_reserva_list' %}" class="btn btn-primary btn-block">Administrar Reservas</a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'admin_empleado_list' %}" class="btn btn-primary btn-block">Administrar Empleados</a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'admin_cliente_list' %}" class="btn btn-primary btn-block">Administrar Clientes</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
