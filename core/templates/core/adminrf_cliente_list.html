@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <h1>Lista de Clientes</h1>
-        <a href="{% url 'cliente_create' %}" class="btn btn-primary">Nuevo Cliente</a>
+        <a href="{% url 'adminrf_cliente_create' %}" class="btn btn-primary">Nuevo Cliente</a>
         <table class="table mt-3">
             <thead>
                 <tr>
@@ -28,7 +28,7 @@
                     <td>{{ cliente.cliente_email }}</td>
                     <td>{{ cliente.cliente_telefono }}</td>
                     <td>
-                        <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-warning">Editar</a>
+                        <a href="{% url 'adminrf_cliente_update' cliente.pk %}" class="btn btn-warning">Editar</a>
                         <button class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal" data-id="{{ habitacion.pk }}">Eliminar</button>
                     </td>
                 </tr>
