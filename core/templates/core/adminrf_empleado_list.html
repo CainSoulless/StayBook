@@ -11,7 +11,7 @@
 <body>
     <div class="container mt-5">
         <h1>Administrar Empleados</h1>
-        <a href="{% url 'admin_empleado_create' %}" class="btn btn-success mb-3">Agregar Nuevo Empleado</a>
+        <a href="{% url 'adminrf_empleado_create' %}" class="btn btn-success mb-3">Agregar Nuevo Empleado</a>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -32,7 +32,7 @@
                     <td>{{ empleado.empleado_email }}</td>
                     <td>{{ empleado.empleado_telefono }}</td>
                     <td>
-                        <a href="{% url 'admin_empleado_update' empleado.pk %}" class="btn btn-warning">Editar</a>
+                        <a href="{% url 'adminrf_empleado_update' empleado.pk %}" class="btn btn-warning">Editar</a>
                         <button class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal" data-id="{{ empleado.pk }}">Eliminar</button>
                     </td>
                 </tr>

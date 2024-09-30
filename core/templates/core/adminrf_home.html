@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Administrador - Home</title>
+    <title>Admin Home</title>
 </head>
 <body>
     <div class="container mt-5">
@@ -13,16 +13,16 @@
 
         <div class="row">
             <div class="col-md-3">
-                <a href="{% url 'admin_habitacion_list' %}" class="btn btn-primary btn-block">Administrar Habitaciones</a>
+                <a href="{% url 'adminrf_habitacion_list' %}" class="btn btn-primary btn-block">Administrar Habitaciones</a>
             </div>
             <div class="col-md-3">
-                <a href="{% url 'admin_reserva_list' %}" class="btn btn-primary btn-block">Administrar Reservas</a>
+                <a href="{% url 'adminrf_reserva_list' %}" class="btn btn-primary btn-block">Administrar Reservas</a>
             </div>
             <div class="col-md-3">
-                <a href="{% url 'admin_empleado_list' %}" class="btn btn-primary btn-block">Administrar Empleados</a>
+                <a href="{% url 'adminrf_empleado_list' %}" class="btn btn-primary btn-block">Administrar Empleados</a>
             </div>
             <div class="col-md-3">
-                <a href="{% url 'admin_cliente_list' %}" class="btn btn-primary btn-block">Administrar Clientes</a>
+                <a href="{% url 'adminrf_cliente_list' %}" class="btn btn-primary btn-block">Administrar Clientes</a>
             </div>
         </div>
     </div>

@@ -1,21 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-'''class Usuario(models.Model):        -------> MODIFICAR USUARIO
-    USUARIO_TIPOS = [
-        ('cliente', 'Cliente'),
-        ('empleado', 'Empleado'),
-        ('administrador', 'Administrador'),
-    ]
-    
-    usuario_nombre = models.CharField(max_length=50)
-    usuario_email = models.EmailField(max_length=150, unique=True)
-    usuario_contrasena = models.CharField(max_length=100)
-    usuario_tipo = models.CharField(max_length=15, choices=USUARIO_TIPOS, default='cliente')
-    
-    def __str__(self):
-        return f'{self.usuario_nombre} ({self.get_usuario_tipo_display()})' '''
-
 class Administrador(models.Model):
     admin_nombre = models.CharField(max_length=100)
     admin_apellidos = models.CharField(max_length=100)

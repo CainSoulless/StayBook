@@ -1,7 +1,21 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from .models import Cliente, Habitacion, Reserva, Empleado
 
+class RegistroForm(UserCreationForm):
+    first_name = forms.CharField(max_length=30, required=True, label='Nombre')
+    last_name = forms.CharField(max_length=30, required=True, label='Apellido')
+    email = forms.EmailField(required=True, label='Email')
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+    
+    def __init__(self, *args, **kwargs):
+        super(RegistroForm, self).__init__(*args, **kwargs)
+        for fieldname in ['username', 'password1', 'password2']:
+            self.fields[fieldname].help_text = None
 
 class ClienteForm(forms.ModelForm):
     class Meta:
