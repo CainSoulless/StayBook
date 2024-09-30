@@ -1,35 +1,36 @@
-body {
-    background-color: #0c3a4d;
-    color: white; 
-    font-family: Arial, sans-serif; 
-}
-
 .navbar {
-    margin-bottom: 20px; 
+    background-color: #0c3a4d;
+}
+.navbar-brand, .nav-link {
+    color: white;
+    font-size: 1.1rem;
+}
+.nav-link:hover {
+    color: #f8f9fa;
 }
 
+/* Cards Styling */
 .card {
-    background-color: #f8f9fa; 
-    border-radius: 10px; 
-    transition: transform 0.2s; 
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
 }
 
-.card:hover {
-    transform: scale(1.05);
-}
-
+/* Text Alignment and Button Styling */
 .card-title {
-    font-size: 1.5rem; 
-    color: #0c3a4d; 
+    font-size: 1.3rem;
+    font-weight: bold;
 }
-
 .card-text {
-    font-size: 1rem; 
+    font-size: 1rem;
+    color: #555555;
 }
-
-.btn {
-    margin-top: 10px; 
-    padding: 15px; 
-    font-size: 1.25rem; 
-    width: 100%; 
+.btn-primary {
+    background-color: #0c3a4d;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #09526b;
 }
