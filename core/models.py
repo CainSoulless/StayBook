@@ -56,7 +56,8 @@ class Reserva(models.Model):
     reserva_fecha_fin = models.DateField()  # Fecha de finalización de la estancia
     reserva_total_dias = models.IntegerField(blank=True, null=True)  # Se puede calcular automáticamente
     reserva_estado = models.CharField(max_length=50, default='Pendiente')  # Estado de la reserva
-    tipo_pago = models.CharField(max_length=50)  # Tipo de pago seleccionado (tarjeta, PayPal, etc.)
+    # tipo_pago = models.CharField(max_length=50)  # Tipo de pago seleccionado (tarjeta, PayPal, etc.)
+    tipo_pago = models.CharField(max_length=100, default='Tarjeta de Crédito')
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)  # Relación con Cliente
     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)  # Relación con Habitación
 

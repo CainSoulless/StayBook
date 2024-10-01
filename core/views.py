@@ -3,12 +3,13 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Cliente, Habitacion, Reserva, Empleado, Usuario
+from .models import Cliente, Habitacion, Reserva, Empleado, Usuario, Administrador
 from .forms import ClienteForm, HabitacionForm, EmpleadoForm, RegistroForm
 import json
 from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 from django.utils import timezone
 
 def landing (request):
@@ -42,8 +43,8 @@ def cliente_home(request):
 def historial_reservas(request):
     return render(request, 'core/historial_reservas.html')
 
-def reserva_habitacion(request):
-    return render(request, 'core/reserva_habitacion.html')
+# def reserva_habitacion(request):
+#     return render(request, 'core/reserva_habitacion.html')
 
 def cliente_datos(request):
     return render(request, 'core/cliente_datos.html')
@@ -209,8 +210,16 @@ def detalle_habitacion(request, habitacion_id):
 def reserva_habitacion(request, habitacion_id):
     if request.method == 'POST':
         habitacion = get_object_or_404(Habitacion, id=habitacion_id)
-        cliente = request.user.cliente  # Suponiendo que el cliente está relacionado con el usuario autenticado
-        
+        # Verifica si el usuario tiene un perfil de cliente o administrador
+        try:
+            cliente = request.user.cliente
+        except Cliente.DoesNotExist:
+            try:
+                cliente = request.user.administrador
+            except Administrador.DoesNotExist:
+                messages.error(request, 'No tienes un perfil de cliente o administrador asociado.')
+                return redirect('detalle_habitacion', habitacion_id=habitacion_id)
+
         metodo_pago = request.POST.get('metodo_pago')
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin')
@@ -230,7 +239,8 @@ def reserva_habitacion(request, habitacion_id):
             reserva_total_dias=total_dias,
             reserva_estado='Confirmada',
             cliente=cliente,
-            habitacion=habitacion
+            habitacion=habitacion,
+            tipo_pago=metodo_pago
         )
 
         # Redirigir al historial de reservas o a otra página que consideres adecuada

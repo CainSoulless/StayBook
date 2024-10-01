@@ -19,7 +19,7 @@
                     <p class="card-text"><strong>Precio por noche:</strong> ${{ habitacion.habitacion_precio }}</p>
                     
                     <!-- Botón para abrir modal de pago -->
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#modalPago">Reservar esta habitación</button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPago">Reservar esta habitación</button>
                 </div>
             </div>
         </div>
@@ -27,16 +27,14 @@
 </div>
 
 <!-- Modal de pago -->
-<div class="modal fade" id="modalPago" tabindex="-1" role="dialog" aria-labelledby="modalPagoLabel" aria-hidden="true">
+<div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form method="post" action="{% url 'reserva_habitacion' habitacion.id %}">
                 {% csrf_token %}
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalPagoLabel">Confirmar Reserva</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Selecciona tu método de pago:</p>
@@ -51,7 +49,7 @@
                     <input type="date" name="fecha_fin" class="form-control mt-2" required>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
                 </div>
             </form>
@@ -59,3 +57,4 @@
     </div>
 </div>
 {% endblock %}
+
