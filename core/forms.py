@@ -27,10 +27,10 @@ class HabitacionForm(forms.ModelForm):
         model = Habitacion
         fields = ['habitacion_numero', 'habitacion_categoria', 'habitacion_descripcion', 'habitacion_precio', 'hotel']
 
-class ReservaForm(forms.ModelForm):
-    class Meta:
-        model = Reserva
-        fields = ['reserva_fecha', 'reserva_fecha_inicio', 'reserva_fecha_fin', 'reserva_total_dias', 'reserva_estado', 'cliente', 'habitacion']
+# class ReservaForm(forms.ModelForm):
+#     class Meta:
+#         model = Reserva
+#         fields = ['reserva_fecha', 'reserva_fecha_inicio', 'reserva_fecha_fin', 'reserva_total_dias', 'reserva_estado', 'cliente', 'habitacion']
 
 class EmpleadoForm(forms.ModelForm):
     class Meta:

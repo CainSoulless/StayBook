@@ -51,16 +51,35 @@ class Habitacion(models.Model):
         return f'Habitación {self.habitacion_numero} - {self.hotel.hotel_nombre}'
 
 class Reserva(models.Model):
-    reserva_fecha = models.DateField()
-    reserva_fecha_inicio = models.DateField()
-    reserva_fecha_fin = models.DateField()
-    reserva_total_dias = models.IntegerField()
-    reserva_estado = models.CharField(max_length=50)
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)
+    reserva_fecha = models.DateField(auto_now_add=True)  # Fecha cuando se realizó la reserva
+    reserva_fecha_inicio = models.DateField()  # Fecha de inicio de la estancia
+    reserva_fecha_fin = models.DateField()  # Fecha de finalización de la estancia
+    reserva_total_dias = models.IntegerField(blank=True, null=True)  # Se puede calcular automáticamente
+    reserva_estado = models.CharField(max_length=50, default='Pendiente')  # Estado de la reserva
+    tipo_pago = models.CharField(max_length=50)  # Tipo de pago seleccionado (tarjeta, PayPal, etc.)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)  # Relación con Cliente
+    habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)  # Relación con Habitación
 
     def __str__(self):
         return f'Reserva de {self.cliente} en {self.habitacion}'
+
+    # Sobrescribimos el método save para calcular los días automáticamente
+    def save(self, *args, **kwargs):
+        if self.reserva_fecha_inicio and self.reserva_fecha_fin:
+            self.reserva_total_dias = (self.reserva_fecha_fin - self.reserva_fecha_inicio).days
+        super(Reserva, self).save(*args, **kwargs)
+
+# class Reserva(models.Model):
+#     reserva_fecha = models.DateField()
+#     reserva_fecha_inicio = models.DateField()
+#     reserva_fecha_fin = models.DateField()
+#     reserva_total_dias = models.IntegerField()
+#     reserva_estado = models.CharField(max_length=50)
+#     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+#     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return f'Reserva de {self.cliente} en {self.habitacion}'
 
 class Pago(models.Model):
     pago_fecha = models.DateField()

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends 'base.html' %}
 
 {% load static %}
@@ -7,9 +6,9 @@
     Cliente Home - Reffbook
 {% endblock %}
 
-{% block extra_head %}
+<!-- {% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/cliente_home.css' %}">
-{% endblock %}
+{% endblock %} -->
 
 {% block content %}
     <h2 class="text-center mb-4">Bienvenido a Reffbook</h2>
@@ -24,82 +23,9 @@
                     <!-- Actualizamos el enlace para redirigir a la lista de habitaciones -->
                     <a href="{% url 'lista_habitaciones' %}" class="btn btn-primary w-100">Ver Habitaciones</a>
                 </div>
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cliente Home</title>
-    {% load static %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhv5gt+FryAlI6XYWc9vAuUnVhb4OpLJXD7x53Q6AfaGpccYtn2dqOnOjTHRnk" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/cliente_home.css' %}">
-    <style>
-        /* Navbar Styling */
-        .navbar {
-            background-color: #0c3a4d;
-        }
-        .navbar-brand, .nav-link {
-            color: white;
-            font-size: 1.1rem;
-        }
-        .nav-link:hover {
-            color: #f8f9fa;
-        }
-
-        /* Cards Styling */
-        .card {
-            background-color: #ffffff;
-            color: #000000;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-        }
-
-        /* Text Alignment and Button Styling */
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-        .card-text {
-            font-size: 1rem;
-            color: #555555;
-        }
-        .btn-primary {
-            background-color: #0c3a4d;
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #09526b;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand">Bienvenido!</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'reserva_habitacion' %}">Reservar</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cliente_datos' %}">Datos cliente</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'historial_reservas' %}">Historial reservas</a>
-                    </li>           
-                </ul>
->>>>>>> ea5fde4bb26da8617309cd9270073d79a905b81c
             </div>
         </div>
 
-<<<<<<< HEAD
         <!-- Historial de reservas -->
         <div class="col-md-4 mb-4">
             <div class="card border-light h-100">
@@ -121,31 +47,6 @@
                     <p class="card-text">Actualiza tu información personal para mantenerla al día.</p>
                     <a href="{% url 'cliente_datos' %}" class="btn btn-primary w-100">Modificar Datos</a>
                 </div>
-=======
-    <!-- Cards Section -->
-    <div class="container mt-5">
-        <div class="card w-75">
-            <div class="card-body">
-                <h5 class="card-title">Hacer nueva reserva</h5>
-                <p class="card-text">Realiza una nueva reserva de habitación de forma rápida y sencilla.</p>
-                <a href="{% url 'reserva_habitacion' %}" class="btn btn-primary">Ir</a>
-            </div>
-        </div>
-
-        <div class="card w-75">
-            <div class="card-body">
-                <h5 class="card-title">Ver historial de reservas</h5>
-                <p class="card-text">Consulta tus reservas anteriores y revisa los detalles.</p>
-                <a href="{% url 'historial_reservas' %}" class="btn btn-primary">Ir</a>
-            </div>
-        </div>
-
-        <div class="card w-75">
-            <div class="card-body">
-                <h5 class="card-title">Modificar datos personales</h5>
-                <p class="card-text">Actualiza tu información personal para mantenerla al día.</p>
-                <a href="{% url 'cliente_datos' %}" class="btn btn-primary">Ir</a>
->>>>>>> ea5fde4bb26da8617309cd9270073d79a905b81c
             </div>
         </div>
     </div>

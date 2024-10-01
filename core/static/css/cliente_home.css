@@ -1,109 +1,76 @@
-<<<<<<< HEAD
-/* Estilo de las imágenes tipo banner */
-.img-banner {
-    width: 100%;
-    height: 150px;  /* Ajusta la altura estilo banner */
-    object-fit: cover;  /* Asegura que la imagen se recorte y no se distorsione */
-    opacity: 0.8;  /* Aplica opacidad para un efecto suave */
-    transition: opacity 0.3s ease;  /* Efecto de transición suave */
+/* Definir el color de fondo para toda la aplicación */
+body {
+    background-color: #0c3a4d; /* Color de fondo que quieres usar */
+    color: white; /* Cambia el color del texto para que sea legible en el fondo oscuro */
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-.img-banner:hover {
-    opacity: 1;  /* Incrementa la opacidad al pasar el mouse */
+/* Estilos para el contenedor principal */
+.container {
+    margin-top: 20px;
 }
 
-/* Estilo de las tarjetas */
+/* Estilos para el contenido de las tarjetas */
 .card {
-    border-radius: 10px;  /* Bordes redondeados para un toque estético */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);  /* Sombra suave para darle profundidad */
-    margin: 15px;  /* Añade margen entre las tarjetas */
-    transition: transform 0.2s ease; /* Efecto suave al pasar el mouse */
-    border: none; /* Elimina el borde por defecto */
-}
-
-.card:hover {
-    transform: scale(1.05); /* Incrementa ligeramente el tamaño al pasar el mouse */
-}
-
-/* Eliminar el subrayado de los enlaces y establecer el color */
-.card-link {
-    text-decoration: none;
-    color: inherit;
-}
-
-.card-link:hover {
-    text-decoration: none;
-    color: inherit;
-}
-
-/* Estilo para el título de las tarjetas */
-.card-title {
-    font-family: 'Playfair Display', serif;  /* Tipografía elegante y clásica */
-    font-size: 1.5rem;  /* Tamaño de letra más grande */
-    font-weight: 700;  /* Aumenta el grosor del texto */
-    color: #2c3e50;  /* Color elegante, más oscuro */
-    margin-bottom: 15px;  /* Espaciado inferior */
-    letter-spacing: 0.5px;  /* Añade un pequeño espaciado entre las letras */
-    text-transform: capitalize;  /* Capitaliza las palabras */
-}
-
-/* Estilo para el texto de descripción */
-.card-text {
-    font-family: 'Roboto', sans-serif;  /* Tipografía moderna y sencilla */
-    font-size: 1rem;  /* Tamaño de letra moderado */
-    font-weight: 400;  /* Letra normal, no muy gruesa */
-    color: #7f8c8d;  /* Color gris suave */
-    line-height: 1.6;  /* Mejora el espaciado entre líneas */
-    letter-spacing: 0.3px;  /* Espaciado entre letras */
-    margin-bottom: 20px;  /* Espaciado debajo del texto */
-}
-
-/* Ajustes para que el texto de la tarjeta esté mejor alineado */
-.card-body {
-    padding: 20px;  /* Aumenta el padding para dar más espacio al texto */
-    text-align: center;  /* Mantiene el texto centrado */
-}
-
-/* Efecto de hover en el título */
-.card-title:hover {
-    color: #2980b9;  /* Cambia el color del título al pasar el mouse */
-    transition: color 0.3s ease;  /* Suaviza el cambio de color */
-}
-=======
-.navbar {
-    background-color: #0c3a4d;
-}
-.navbar-brand, .nav-link {
-    color: white;
-    font-size: 1.1rem;
-}
-.nav-link:hover {
-    color: #f8f9fa;
-}
-
-/* Cards Styling */
-.card {
-    background-color: #ffffff;
-    color: #000000;
-    border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
+    border: none;
+    margin-bottom: 30px;
 }
 
-/* Text Alignment and Button Styling */
-.card-title {
-    font-size: 1.3rem;
-    font-weight: bold;
+.card img {
+    border-radius: 10px 10px 0 0;
 }
-.card-text {
-    font-size: 1rem;
-    color: #555555;
-}
+
+/* Estilo para el botón principal de reserva */
 .btn-primary {
-    background-color: #0c3a4d;
-    border: none;
+    background-color: #007bff;
+    border-color: #007bff;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
+
 .btn-primary:hover {
-    background-color: #09526b;
+    background-color: #0056b3;
+    border-color: #0056b3;
 }
->>>>>>> ea5fde4bb26da8617309cd9270073d79a905b81c
+
+/* Estilos para el modal */
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal-footer .btn-primary {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Estilos del footer */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+input, select, textarea {
+    background-color: white;
+    color: #0c3a4d;
+}
+
+.card, .modal-content {
+    background-color: #f8f9fa;
+    color: black;
+}

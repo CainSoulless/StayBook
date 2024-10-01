@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Cliente, Habitacion, Reserva, Empleado, Usuario
-from .forms import ClienteForm, HabitacionForm, ReservaForm, EmpleadoForm, RegistroForm
+from .forms import ClienteForm, HabitacionForm, EmpleadoForm, RegistroForm
+import json
+from datetime import datetime
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 def landing (request):
     return render (request, 'core/landing.html')
@@ -198,3 +204,36 @@ def lista_habitaciones(request):
 def detalle_habitacion(request, habitacion_id):
     habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
     return render(request, 'core/detalle_habitacion.html', {'habitacion': habitacion})
+
+@login_required
+def reserva_habitacion(request, habitacion_id):
+    if request.method == 'POST':
+        habitacion = get_object_or_404(Habitacion, id=habitacion_id)
+        cliente = request.user.cliente  # Suponiendo que el cliente está relacionado con el usuario autenticado
+        
+        metodo_pago = request.POST.get('metodo_pago')
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+
+        # Convertir las fechas del formulario en objetos de tipo date
+        fecha_inicio_obj = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+        fecha_fin_obj = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
+
+        # Calcular el número total de días de la reserva
+        total_dias = (fecha_fin_obj - fecha_inicio_obj).days
+
+        # Crear la reserva en la base de datos
+        nueva_reserva = Reserva.objects.create(
+            reserva_fecha=timezone.now().date(),
+            reserva_fecha_inicio=fecha_inicio_obj,
+            reserva_fecha_fin=fecha_fin_obj,
+            reserva_total_dias=total_dias,
+            reserva_estado='Confirmada',
+            cliente=cliente,
+            habitacion=habitacion
+        )
+
+        # Redirigir al historial de reservas o a otra página que consideres adecuada
+        return redirect('historial_reservas')
+
+    return redirect('detalle_habitacion', habitacion_id=habitacion_id)
