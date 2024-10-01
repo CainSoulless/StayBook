@@ -45,7 +45,8 @@ class Habitacion(models.Model):
     habitacion_descripcion = models.TextField(null=True, blank=True)
     habitacion_precio = models.DecimalField(max_digits=10, decimal_places=2)
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
-    
+    habitacion_imagen = models.ImageField(upload_to='img/habitaciones/', null=True, blank=True)  # Campo para la imagen
+
     def __str__(self):
         return f'Habitación {self.habitacion_numero} - {self.hotel.hotel_nombre}'
 

@@ -1,0 +1,31 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light py-3 shadow-sm">
+    <div class="container-fluid">
+        <!-- Logo del navbar -->
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'cliente_home' %}" aria-label="Reffbook Home">
+            <img src="{% static 'img/reffbook_logo.png' %}" alt="Logo de Reffbook" width="40" height="40" class="me-2">
+            <span class="fs-4 fw-bold">Reffbook</span>
+        </a>
+
+        <!-- Botón hamburguesa para menú responsive -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menú del navbar -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase text-primary mx-2" href="{% url 'reserva_habitacion' %}">Hacer Reserva</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase text-primary mx-2" href="{% url 'historial_reservas' %}">Historial de Reservas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase text-primary mx-2" href="{% url 'cliente_datos' %}">Modificar Datos</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

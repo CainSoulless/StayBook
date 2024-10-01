@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('landing/', views.landing, name='landing'),
@@ -28,4 +30,11 @@ urlpatterns = [
     path('reserva_habitacion/', views.reserva_habitacion, name='reserva_habitacion'),
     path('cliente_datos/', views.cliente_datos, name='cliente_datos'),
     path('home_cliente/', views.home_cliente, name='home_cliente'),
+    path('procesar_reserva/', views.procesar_reserva, name='procesar_reserva'),
+    path('habitaciones/', views.lista_habitaciones, name='lista_habitaciones'),
+    path('habitacion/<int:habitacion_id>/', views.detalle_habitacion, name='detalle_habitacion'),
+    path('reserva/<int:habitacion_id>/', views.reserva_habitacion, name='reserva_habitacion'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

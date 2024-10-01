@@ -5,7 +5,6 @@ from django.contrib import messages
 from .models import Cliente, Habitacion, Reserva, Empleado, Usuario
 from .forms import ClienteForm, HabitacionForm, ReservaForm, EmpleadoForm, RegistroForm
 
-
 def landing (request):
     return render (request, 'core/landing.html')
 
@@ -183,3 +182,19 @@ def adminrf_empleado_delete(request, pk):
     if request.method == 'POST':
         empleado.delete()
         return redirect('adminrf_empleado_list')
+
+def procesar_reserva(request):
+    if request.method == 'POST':
+        # Aquí procesas el formulario de reserva
+        # Si todo está bien, puedes redirigir a otra página
+        return redirect('cliente_home')  # O donde quieras redirigir después de la reserva
+
+    return render(request, 'core/reserva_habitacion.html')
+
+def lista_habitaciones(request):
+    habitaciones = Habitacion.objects.all()
+    return render(request, 'core/lista_habitaciones.html', {'habitaciones': habitaciones})
+
+def detalle_habitacion(request, habitacion_id):
+    habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
+    return render(request, 'core/detalle_habitacion.html', {'habitacion': habitacion})

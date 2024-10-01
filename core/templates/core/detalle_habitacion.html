@@ -1,0 +1,29 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    Detalle de la Habitación - Reffbook
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <!-- Imagen de la habitación -->
+                <img src="{{ habitacion.habitacion_imagen.url }}" class="card-img-top" alt="Habitación {{ habitacion.habitacion_numero }}">
+                
+                <div class="card-body">
+                    <h5 class="card-title">Habitación {{ habitacion.habitacion_numero }}</h5>
+                    <p class="card-text"><strong>Descripción:</strong> {{ habitacion.habitacion_descripcion }}</p>
+                    <p class="card-text"><strong>Categoría:</strong> {{ habitacion.habitacion_categoria }}</p>
+                    <p class="card-text"><strong>Precio por noche:</strong> ${{ habitacion.habitacion_precio }}</p>
+                    
+                    <!-- Botón para realizar reserva -->
+                    <a href="{% url 'reserva_habitacion' %}" class="btn btn-primary">Reservar esta habitación</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

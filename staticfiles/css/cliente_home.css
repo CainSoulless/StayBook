@@ -33,3 +33,34 @@ body {
     font-size: 1.25rem; 
     width: 100%; 
 }
+
+.img-banner {
+    width: 100%;
+    height: 150px;  /* Ajusta la altura estilo banner */
+    object-fit: cover;  /* Asegura que la imagen se recorte y no se distorsione */
+    opacity: 0.8;  /* Aplica opacidad para un efecto suave */
+    transition: opacity 0.3s ease;  /* Efecto de transición suave */
+}
+
+.img-banner:hover {
+    opacity: 1;  /* Incrementa la opacidad al pasar el mouse */
+}
+
+.card {
+    border-radius: 10px;  /* Bordes redondeados para un toque estético */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Sombra suave para darle profundidad */
+}
+
+.card-body {
+    padding: 15px;  /* Ajuste del padding para un diseño más limpio */
+    text-align: center;
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+.card-text {
+    color: #555;
+    font-size: 14px;
+}
