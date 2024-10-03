@@ -28,11 +28,7 @@
                         <a class="nav-link text-uppercase text-primary mx-2" href="{% url 'cliente_datos' %}">Modificar Datos</a>
                     </li>
                     <li class="nav-item">
-                        <!-- Formulario seguro para cerrar sesión -->
-                        <form method="POST" action="{% url 'logout' %}" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-link nav-link text-uppercase text-danger mx-2" style="padding: 0;">Cerrar Sesión</button>
-                        </form>
+                        <a class="nav-link text-uppercase text-primary mx-2" href="{% url 'logout' %}">Cerrar sesión</a>
                     </li>
                 {% else %}
                     <li class="nav-item">

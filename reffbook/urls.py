@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 from django.shortcuts import redirect
 from core import views
@@ -14,7 +15,8 @@ urlpatterns = [
 
     # Autenticación
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='landing_page'), name='logout'),  # Redirige a landing_page después de logout
+    # path('logout/', auth_views.LogoutView.as_view(next_page=''), name='logout'),  # Redirige a landing_page después de logout
+    path('accounts/logout/', LogoutView.as_view(next_page='/landing'), name='logout'),
     path('registro/', views.registro, name='registro'),
     
     # Rutas para clientes
