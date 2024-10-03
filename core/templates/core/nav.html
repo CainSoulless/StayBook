@@ -19,7 +19,7 @@
             <ul class="navbar-nav ms-auto">
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link text-uppercase text-primary mx-2" href="{% url 'lista_habitaciones' %}">Hacer Reserva</a>
+                        <a class="nav-link text-uppercase text-primary mx-2" href="{% url 'reserva_habitacion' %}">Hacer Reserva</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-uppercase text-primary mx-2" href="{% url 'historial_reservas' %}">Historial de Reservas</a>
@@ -29,7 +29,10 @@
                     </li>
                     <li class="nav-item">
                         <!-- Formulario seguro para cerrar sesión -->
-                        <a class="nav-link text-uppercase text-danger mx-2" href="{% url 'logout' %}">Cerrar Sesión</a>
+                        <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link nav-link text-uppercase text-danger mx-2" style="padding: 0;">Cerrar Sesión</button>
+                        </form>
                     </li>
                 {% else %}
                     <li class="nav-item">

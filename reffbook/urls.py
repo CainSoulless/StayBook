@@ -4,17 +4,17 @@ from core import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.contrib import admin
 
 urlpatterns = [
     # Rutas principales
 
     path('', lambda req: redirect('landing_page')),
-    # path('', views.home, name='home'),  # Nueva ruta para la raíz
     path('landing/', views.landing_page, name='landing_page'),
 
     # Autenticación
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='landing_page'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='landing_page'), name='logout'),  # Redirige a landing_page después de logout
     path('registro/', views.registro, name='registro'),
     
     # Rutas para clientes
@@ -48,6 +48,7 @@ urlpatterns = [
 
     # Rutas para autenticación adicionales
     path('accounts/', include('django.contrib.auth.urls')),
+    path('admin/', admin.site.urls),  # Asegúrate de incluir esta línea
 ]
 
 # Configuración de archivos estáticos en modo DEBUG

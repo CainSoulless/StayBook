@@ -11,7 +11,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'habitacion', 'reserva_fecha_inicio', 'reserva_fecha_fin', 'reserva_estado')
+    list_display = ('id', 'usuario', 'reserva_fecha', 'reserva_estado', 'tipo_pago')  # Cambiado a 'usuario'
 
 @admin.register(Habitacion)
 class HabitacionAdmin(admin.ModelAdmin):
@@ -24,9 +24,3 @@ class HotelAdmin(admin.ModelAdmin):
 @admin.register(Pago)
 class PagoAdmin(admin.ModelAdmin):
     list_display = ('pago_fecha', 'pago_monto', 'pago_metodo', 'reserva')
-
-# @admin.register(Usuario)
-# class UsuarioAdmin(admin.ModelAdmin):
-#     list_display = ('usuario_nombre', 'usuario_contrasena', 'usuario_tipo')
-#     list_filter = ('usuario_tipo',)
-#     search_fields = ('usuario_nombre', 'usuario_tipo')

@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Cliente, Habitacion, Reserva, Empleado, Administrador
-from .forms import ClienteForm, HabitacionForm, EmpleadoForm, RegistroForm
+from .forms import ClienteForm, HabitacionForm, EmpleadoForm
 import json
 from datetime import datetime
 from django.http import JsonResponse
@@ -13,9 +14,6 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import redirect
 from django.http import HttpRequest
-
-def home(request):
-    return render(request, 'core/home.html')
 
 def inicio(request):
     return redirect('landing_page')
@@ -34,16 +32,35 @@ def inicio_sesion(request):
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
     return render(request, 'core/inicio_sesion.html')
-    
+
 def registro(request):
     if request.method == 'POST':
-        form = RegistroForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')  # Redirige a la página de login después del registro
-    else:
-        form = RegistroForm()
-    return render(request, 'registration/registro.html', {'form': form})
+        nombre_completo = request.POST['nombre_completo']
+        email = request.POST['email']
+        password1 = request.POST['password']
+        password2 = request.POST['password2']
+
+        # Verificar que las contraseñas coincidan
+        if password1 != password2:
+            messages.error(request, "Las contraseñas no coinciden.")
+            return redirect('registro')
+
+        # Crear el usuario
+        try:
+            user = User.objects.create_user(username=email, email=email, password=password1)
+            user.save()
+
+            # Crear el cliente asociado
+            cliente = Cliente(usuario=user, cliente_nombre=nombre_completo, cliente_email=email)
+            cliente.save()
+
+            messages.success(request, "Registro exitoso. Ahora puedes iniciar sesión.")
+            return redirect('login')  # Redirigir a la página de login o donde prefieras
+        except Exception as e:
+            messages.error(request, "Ocurrió un error al registrar el usuario.")
+            return redirect('registro')
+
+    return render(request, 'registration/registro.html')
 
 
 def cliente_home(request):

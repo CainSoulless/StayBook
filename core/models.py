@@ -31,8 +31,8 @@ class Cliente(models.Model):
     cliente_apellidos = models.CharField(max_length=100)
     cliente_email = models.EmailField(max_length=150)
     cliente_telefono = models.CharField(max_length=15)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+
     def __str__(self):
         return f'{self.cliente_nombre} {self.cliente_apellidos}'
 
@@ -76,11 +76,11 @@ class Reserva(models.Model):
     reserva_total_dias = models.IntegerField(blank=True, null=True)  # Se puede calcular automáticamente
     reserva_estado = models.CharField(max_length=50, default='Pendiente')  # Estado de la reserva
     tipo_pago = models.CharField(max_length=100, default='Tarjeta de Crédito')
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)  # Relación con Cliente
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)  # Relación con Cliente
     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)  # Relación con Habitación
 
     def __str__(self):
-        return f'Reserva de {self.cliente} en {self.habitacion}'
+        return f'Reserva de {self.usuario} en {self.habitacion}'
 
     # Sobrescribimos el método save para calcular los días automáticamente
     def save(self, *args, **kwargs):
