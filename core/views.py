@@ -226,6 +226,7 @@ def detalle_habitacion(request, habitacion_id):
     habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
     return render(request, 'core/detalle_habitacion.html', {'habitacion': habitacion})
 
+
 @login_required
 def reserva_habitacion(request, habitacion_id):
     if request.method == 'POST':
@@ -258,7 +259,7 @@ def reserva_habitacion(request, habitacion_id):
             reserva_fecha_fin=fecha_fin_obj,
             reserva_total_dias=total_dias,
             reserva_estado='Confirmada',
-            cliente=cliente,
+            usuario=request.user,  # Cambié aquí a 'usuario'
             habitacion=habitacion,
             tipo_pago=metodo_pago
         )
@@ -267,6 +268,7 @@ def reserva_habitacion(request, habitacion_id):
         return redirect('historial_reservas')
 
     return redirect('detalle_habitacion', habitacion_id=habitacion_id)
+
 
 @login_required
 def historial_reservas(request):
