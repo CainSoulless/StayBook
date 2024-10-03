@@ -1,6 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class UserProfile(models.Model):
+    USER_TYPES = (
+        ('cliente', 'Cliente'),
+        ('empleado', 'Empleado'),
+        ('administrador', 'Administrador'),
+    )
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_type = models.CharField(max_length=20, choices=USER_TYPES)
+
+    def __str__(self):
+        return self.user.username
+
+
 class Administrador(models.Model):
     admin_nombre = models.CharField(max_length=100)
     admin_apellidos = models.CharField(max_length=100)
@@ -11,6 +25,7 @@ class Administrador(models.Model):
     def __str__(self):
         return f'{self.admin_nombre} {self.admin_apellidos}'
 
+
 class Cliente(models.Model):
     cliente_nombre = models.CharField(max_length=100)
     cliente_apellidos = models.CharField(max_length=100)
@@ -20,6 +35,7 @@ class Cliente(models.Model):
     
     def __str__(self):
         return f'{self.cliente_nombre} {self.cliente_apellidos}'
+
 
 class Empleado(models.Model):
     empleado_nombre = models.CharField(max_length=100)
@@ -32,12 +48,14 @@ class Empleado(models.Model):
     def __str__(self):
         return f'{self.empleado_nombre} {self.empleado_apellidos}'
 
+
 class Hotel(models.Model):
     hotel_nombre = models.CharField(max_length=100)
     hotel_direccion = models.CharField(max_length=255)
     
     def __str__(self):
         return self.hotel_nombre
+
 
 class Habitacion(models.Model):
     habitacion_numero = models.CharField(max_length=10)
@@ -50,13 +68,13 @@ class Habitacion(models.Model):
     def __str__(self):
         return f'Habitación {self.habitacion_numero} - {self.hotel.hotel_nombre}'
 
+
 class Reserva(models.Model):
     reserva_fecha = models.DateField(auto_now_add=True)  # Fecha cuando se realizó la reserva
     reserva_fecha_inicio = models.DateField()  # Fecha de inicio de la estancia
     reserva_fecha_fin = models.DateField()  # Fecha de finalización de la estancia
     reserva_total_dias = models.IntegerField(blank=True, null=True)  # Se puede calcular automáticamente
     reserva_estado = models.CharField(max_length=50, default='Pendiente')  # Estado de la reserva
-    # tipo_pago = models.CharField(max_length=50)  # Tipo de pago seleccionado (tarjeta, PayPal, etc.)
     tipo_pago = models.CharField(max_length=100, default='Tarjeta de Crédito')
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)  # Relación con Cliente
     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)  # Relación con Habitación
@@ -70,17 +88,6 @@ class Reserva(models.Model):
             self.reserva_total_dias = (self.reserva_fecha_fin - self.reserva_fecha_inicio).days
         super(Reserva, self).save(*args, **kwargs)
 
-# class Reserva(models.Model):
-#     reserva_fecha = models.DateField()
-#     reserva_fecha_inicio = models.DateField()
-#     reserva_fecha_fin = models.DateField()
-#     reserva_total_dias = models.IntegerField()
-#     reserva_estado = models.CharField(max_length=50)
-#     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-#     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return f'Reserva de {self.cliente} en {self.habitacion}'
 
 class Pago(models.Model):
     pago_fecha = models.DateField()
@@ -90,17 +97,3 @@ class Pago(models.Model):
     
     def __str__(self):
         return f'Pago de {self.pago_monto} para {self.reserva}'
-
-class Usuario(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
-    
-class Usuario(models.Model):
-    usuario_nombre = models.CharField(max_length=100)
-    usuario_contrasena = models.CharField(max_length=128)
-    usuario_tipo = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.usuario_nombre

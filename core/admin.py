@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cliente, Empleado, Reserva, Habitacion, Hotel, Pago, Usuario
+from .models import Cliente, Empleado, Reserva, Habitacion, Hotel, Pago
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
@@ -25,8 +25,8 @@ class HotelAdmin(admin.ModelAdmin):
 class PagoAdmin(admin.ModelAdmin):
     list_display = ('pago_fecha', 'pago_monto', 'pago_metodo', 'reserva')
 
-@admin.register(Usuario)
-class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ('usuario_nombre', 'usuario_contrasena', 'usuario_tipo')
-    list_filter = ('usuario_tipo',)
-    search_fields = ('usuario_nombre', 'usuario_tipo')
+# @admin.register(Usuario)
+# class UsuarioAdmin(admin.ModelAdmin):
+#     list_display = ('usuario_nombre', 'usuario_contrasena', 'usuario_tipo')
+#     list_filter = ('usuario_tipo',)
+#     search_fields = ('usuario_nombre', 'usuario_tipo')

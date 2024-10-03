@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Selección de Idioma - Reffbook
+{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <img src="{% static 'img/reffbook_logo.png' %}" alt="Reffbook Logo" class="img-fluid mb-4" width="150">
+    <h1>Bienvenidos a Reffbook</h1>
+    <h3>Seleccione su idioma / Select your language</h3>
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'login' %}" class="mx-3">
+            <img class="img-fluid rounded-circle" src="{% static 'img/idioma_espanol.png' %}" alt="Español" width="150" height="150">
+        </a>
+        <a href="{% url 'login' %}" class="mx-3">
+            <img class="img-fluid rounded-circle" src="{% static 'img/idioma_ingles.png' %}" alt="Inglés" width="150" height="150">
+        </a>
+    </div>
+</div>
+
+<nav class="navbar fixed-bottom navbar-light bg-light">
+    <div class="container-fluid justify-content-center">
+        <a href="{% url 'adminrf_home' %}" class="btn btn-info btn-sm my-3">Administración</a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .img_idioma:hover {
+        transform: scale(1.1);
+        transition: transform 0.2s ease;
+    }
+</style>
+{% endblock %}

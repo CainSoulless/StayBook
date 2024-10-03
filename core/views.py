@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Cliente, Habitacion, Reserva, Empleado, Usuario, Administrador
+from .models import Cliente, Habitacion, Reserva, Empleado, Administrador
 from .forms import ClienteForm, HabitacionForm, EmpleadoForm, RegistroForm
 import json
 from datetime import datetime
@@ -11,9 +11,16 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.utils import timezone
+from django.shortcuts import redirect
 
-def landing (request):
-    return render (request, 'core/landing.html')
+def inicio(request):
+    if request.user.is_authenticated:
+        return redirect('cliente_home')
+    else:
+        return redirect('landing_page')
+
+def landing_page(request):
+    return render(request, 'core/landing_page.html')
 
 def inicio_sesion(request):
     if request.method == 'POST':
@@ -26,19 +33,20 @@ def inicio_sesion(request):
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
     return render(request, 'core/inicio_sesion.html')
-
+    
 def registro(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('inicio_sesion')
+            return redirect('login')  # Redirige a la página de login después del registro
     else:
         form = RegistroForm()
-    return render(request, 'core/registro.html', {'form': form})
+    return render(request, 'registration/registro.html', {'form': form})
+
 
 def cliente_home(request):
-    return render(request, 'core/cliente_home.html')
+    return render(request, 'core/clientes/home_cliente.html')
 
 def historial_reservas(request):
     return render(request, 'core/historial_reservas.html')
