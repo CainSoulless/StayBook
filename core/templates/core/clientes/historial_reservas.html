@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Historial de Reservas</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID Reserva</th>
+            <th>Habitación</th>
+            <th>Fecha Check-In</th>
+            <th>Fecha Check-Out</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reserva in reservas %}
+        <tr>
+            <td>{{ reserva.id }}</td>
+            <td>{{ reserva.habitacion.nombre }}</td>
+            <td>{{ reserva.fecha_check_in }}</td>
+            <td>{{ reserva.fecha_check_out }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -12,12 +12,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import redirect
+from django.http import HttpRequest
+
 
 def inicio(request):
-    if request.user.is_authenticated:
-        return redirect('cliente_home')
-    else:
-        return redirect('landing_page')
+    return redirect('landing_page')
 
 def landing_page(request):
     return render(request, 'core/landing_page.html')
@@ -46,13 +45,7 @@ def registro(request):
 
 
 def cliente_home(request):
-    return render(request, 'core/clientes/home_cliente.html')
-
-def historial_reservas(request):
-    return render(request, 'core/historial_reservas.html')
-
-# def reserva_habitacion(request):
-#     return render(request, 'core/reserva_habitacion.html')
+    return render(request, 'core/clientes/cliente_home.html')
 
 def cliente_datos(request):
     return render(request, 'core/cliente_datos.html')
@@ -255,3 +248,14 @@ def reserva_habitacion(request, habitacion_id):
         return redirect('historial_reservas')
 
     return redirect('detalle_habitacion', habitacion_id=habitacion_id)
+
+@login_required
+def historial_reservas(request):
+    # Obtén el cliente asociado al usuario actual
+    try:
+        cliente = request.user.cliente  # Esto asume que ya has configurado la relación correctamente
+        reservas = Reserva.objects.filter(cliente=cliente)
+    except Cliente.DoesNotExist:
+        reservas = []  # Si no existe, puedes manejarlo de la forma que desees
+
+    return render(request, 'core/clientes/historial_reservas.html', {'reservas': reservas})

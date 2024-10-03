@@ -7,12 +7,12 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # Rutas principales
-    path('', views.inicio, name='landing'),  # Esta ruta ya redirige dinámicamente
+    path('', lambda request: redirect('landing_page'), name='inicio'),  # Redirigir a 'landing_page'
     path('landing/', views.landing_page, name='landing_page'),
 
     # Autenticación
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='landing_page'), name='logout'),  # Redirige a landing_page después de logout
+    path('logout/', auth_views.LogoutView.as_view(next_page='landing_page'), name='logout'),
     path('registro/', views.registro, name='registro'),
     
     # Rutas para clientes
