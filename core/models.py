@@ -97,3 +97,4 @@ class Pago(models.Model):
     
     def __str__(self):
         return f'Pago de {self.pago_monto} para {self.reserva}'
+

@@ -21,7 +21,7 @@
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">Habitación {{ habitacion.habitacion_numero }}</h5>
-                        <p class="card-text">{{ habitacion.habitacion_descripcion|truncatewords:20 }}</p>
+                        <p class="card-text">{{ habitacion.habitacion_descripcion }}</p>
                         <p class="card-text"><strong>Precio:</strong> ${{ habitacion.habitacion_precio }}</p>
                         <a href="{% url 'detalle_habitacion' habitacion.id %}" class="btn btn-primary w-100">Ver Detalles</a>
                     </div>
