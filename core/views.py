@@ -14,6 +14,8 @@ from django.utils import timezone
 from django.shortcuts import redirect
 from django.http import HttpRequest
 
+def home(request):
+    return render(request, 'core/home.html')
 
 def inicio(request):
     return redirect('landing_page')

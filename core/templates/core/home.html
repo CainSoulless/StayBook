@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Página de Inicio</title>
+</head>
+<body>
+    <h1>Bienvenido a Reffbook</h1>
+    <p>Redirigiendo a la página de inicio...</p>
+    <script>
+        setTimeout(function() {
+            window.location.href = "{% url 'landing_page' %}";
+        }, 3000);  // Redirigir después de 3 segundos
+    </script>
+</body>
+</html>
