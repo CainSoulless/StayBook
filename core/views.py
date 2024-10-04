@@ -15,10 +15,14 @@ from django.utils import timezone
 from django.shortcuts import redirect
 from django.http import HttpRequest
 
-def inicio(request):
-    return redirect('landing_page')
+# def inicio(request):
+#     return redirect('landing_page')
 
 def landing_page(request):
+    # Verifica si el usuario está autenticado
+    if request.user.is_authenticated:
+        return redirect('cliente_home')  # Redirige a cliente_home si está logueado
+
     return render(request, 'core/landing_page.html')
 
 def inicio_sesion(request):
@@ -125,16 +129,28 @@ def historial_reservas(request):
 
 @login_required
 def cliente_datos(request):
-    usuario = request.user
-    try:
-        # Obtener la última reserva del usuario
-        ultima_reserva = Reserva.objects.filter(usuario=usuario).order_by('-reserva_fecha').first()
-    except Reserva.DoesNotExist:
-        ultima_reserva = None
+    # Obtén el usuario actual
+    user = request.user
+
+    # Inicializa las variables
+    cliente = None
+    ultima_reserva = None
+    es_admin = user.is_superuser
+
+    if not es_admin:  # Solo intenta obtener el cliente si no es un admin
+        try:
+            cliente = user.cliente  # Esto asume que ya has configurado la relación correctamente
+            # Obtén las reservas del cliente
+            reservas = Reserva.objects.filter(usuario=user).order_by('-reserva_fecha')  # Obtiene reservas del usuario
+            ultima_reserva = reservas.first()  # Obtiene la última reserva, si existe
+        except Cliente.DoesNotExist:
+            cliente = None
 
     return render(request, 'core/clientes/cliente_datos.html', {
-        'usuario': usuario,
-        'ultima_reserva': ultima_reserva
+        'cliente': cliente,
+        'ultima_reserva': ultima_reserva,
+        'es_admin': es_admin,
+        'user': user,  # También puedes pasar el usuario para mostrar su información
     })
 
 # # # # FUNCIONES ADMINISTRADOR

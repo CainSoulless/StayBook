@@ -7,31 +7,36 @@
 
 {% block content %}
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Mi Perfil</h2>
-
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Información del Usuario</h5>
-                <p><strong>Nombre:</strong> {{ usuario.get_full_name }}</p>
-                <p><strong>Correo Electrónico:</strong> {{ usuario.email }}</p>
-                <p><strong>Fecha de Registro:</strong> {{ usuario.date_joined|date:"d/m/Y" }}</p>
+        <h2 class="text-center mb-4">Perfil del Cliente</h2>
+        
+        {% if cliente %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Información del Cliente</h5>
+                    <p><strong>Nombre:</strong> {{ cliente.cliente_nombre }} {{ cliente.cliente_apellidos }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>  <!-- Usando user para mostrar el email -->
+                    <p><strong>Teléfono:</strong> {{ cliente.cliente_telefono }}</p>
+                </div>
             </div>
-        </div>
 
-        <div class="mt-4">
-            <h5 class="card-title">Última Reserva</h5>
             {% if ultima_reserva %}
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-body">
-                        <p><strong>Número de Habitación:</strong> {{ ultima_reserva.habitacion.habitacion_numero }}</p>
-                        <p><strong>Fecha de Inicio:</strong> {{ ultima_reserva.reserva_fecha_inicio|date:"d/m/Y" }}</p>
-                        <p><strong>Fecha de Fin:</strong> {{ ultima_reserva.reserva_fecha_fin|date:"d/m/Y" }}</p>
+                        <h5 class="card-title">Última Reserva</h5>
+                        <p><strong>Fecha de Inicio:</strong> {{ ultima_reserva.reserva_fecha_inicio }}</p>
+                        <p><strong>Fecha de Fin:</strong> {{ ultima_reserva.reserva_fecha_fin }}</p>
                         <p><strong>Estado:</strong> {{ ultima_reserva.reserva_estado }}</p>
                     </div>
                 </div>
             {% else %}
-                <p>No tienes reservas activas.</p>
+                <div class="alert alert-info">No tienes reservas realizadas.</div>
             {% endif %}
-        </div>
+
+        {% elif es_admin %}
+            <div class="alert alert-success">Eres un administrador. Puedes gestionar la aplicación desde el panel de administración.</div>
+            <a href="{% url 'adminrf_home' %}" class="btn btn-primary">Ir al Panel de Administración</a>
+        {% else %}
+            <div class="alert alert-danger">No se encontró información del cliente.</div>
+        {% endif %}
     </div>
 {% endblock %}
