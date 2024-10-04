@@ -1,25 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Historial de Reservas - Reffbook
+{% endblock %}
 
 {% block content %}
-<h1>Historial de Reservas</h1>
-<table>
-    <thead>
-        <tr>
-            <th>ID Reserva</th>
-            <th>Habitación</th>
-            <th>Fecha Check-In</th>
-            <th>Fecha Check-Out</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for reserva in reservas %}
-        <tr>
-            <td>{{ reserva.id }}</td>
-            <td>{{ reserva.habitacion.nombre }}</td>
-            <td>{{ reserva.fecha_check_in }}</td>
-            <td>{{ reserva.fecha_check_out }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Historial de Reservas</h2>
+
+        {% if reservas %}
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Habitación</th>
+                            <th>Fecha de Inicio</th>
+                            <th>Fecha de Fin</th>
+                            <th>Estado</th>
+                            <th>Método de Pago</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reserva in reservas %}
+                            <tr>
+                                <td>{{ reserva.id }}</td>
+                                <td>
+                                    <a href="{% url 'detalle_habitacion' reserva.habitacion.id %}">
+                                        {{ reserva.habitacion.habitacion_numero }}
+                                    </a>
+                                </td>
+                                <td>{{ reserva.reserva_fecha_inicio }}</td>
+                                <td>{{ reserva.reserva_fecha_fin }}</td>
+                                <td>{{ reserva.reserva_estado }}</td>
+                                <td>{{ reserva.tipo_pago }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No tienes reservas en tu historial.
+            </div>
+        {% endif %}
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'cliente_home' %}" class="btn btn-primary">Regresar a Inicio</a>
+        </div>
+    </div>
 {% endblock %}

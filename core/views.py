@@ -62,16 +62,80 @@ def registro(request):
 
     return render(request, 'registration/registro.html')
 
-
+@login_required
 def cliente_home(request):
     return render(request, 'core/clientes/cliente_home.html')
 
+@login_required
 def cliente_datos(request):
     return render(request, 'core/cliente_datos.html')
 
+@login_required
 def home_cliente(request):
     return render(request, 'home_cliente.html')
 
+@login_required
+def reserva_habitacion(request, habitacion_id):
+    if request.method == 'POST':
+        habitacion = get_object_or_404(Habitacion, id=habitacion_id)
+        # Verifica si el usuario tiene un perfil de cliente o administrador
+        try:
+            cliente = request.user.cliente
+        except Cliente.DoesNotExist:
+            try:
+                cliente = request.user.administrador
+            except Administrador.DoesNotExist:
+                messages.error(request, 'No tienes un perfil de cliente o administrador asociado.')
+                return redirect('detalle_habitacion', habitacion_id=habitacion_id)
+
+        metodo_pago = request.POST.get('metodo_pago')
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+
+        # Convertir las fechas del formulario en objetos de tipo date
+        fecha_inicio_obj = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+        fecha_fin_obj = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
+
+        # Calcular el número total de días de la reserva
+        total_dias = (fecha_fin_obj - fecha_inicio_obj).days
+
+        # Crear la reserva en la base de datos
+        nueva_reserva = Reserva.objects.create(
+            reserva_fecha=timezone.now().date(),
+            reserva_fecha_inicio=fecha_inicio_obj,
+            reserva_fecha_fin=fecha_fin_obj,
+            reserva_total_dias=total_dias,
+            reserva_estado='Confirmada',
+            usuario=request.user,  # Cambié aquí a 'usuario'
+            habitacion=habitacion,
+            tipo_pago=metodo_pago
+        )
+
+        # Redirigir al historial de reservas o a otra página que consideres adecuada
+        return redirect('historial_reservas')
+
+    return redirect('detalle_habitacion', habitacion_id=habitacion_id)
+
+@login_required
+def historial_reservas(request):
+    # Obtén todas las reservas del usuario actual
+    reservas = Reserva.objects.filter(usuario=request.user)  # Usamos el campo 'usuario' en lugar de 'cliente'
+
+    return render(request, 'core/clientes/historial_reservas.html', {'reservas': reservas})
+
+@login_required
+def cliente_datos(request):
+    usuario = request.user
+    try:
+        # Obtener la última reserva del usuario
+        ultima_reserva = Reserva.objects.filter(usuario=usuario).order_by('-reserva_fecha').first()
+    except Reserva.DoesNotExist:
+        ultima_reserva = None
+
+    return render(request, 'core/clientes/cliente_datos.html', {
+        'usuario': usuario,
+        'ultima_reserva': ultima_reserva
+    })
 
 # # # # FUNCIONES ADMINISTRADOR
 
@@ -225,58 +289,3 @@ def lista_habitaciones(request):
 def detalle_habitacion(request, habitacion_id):
     habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
     return render(request, 'core/detalle_habitacion.html', {'habitacion': habitacion})
-
-
-@login_required
-def reserva_habitacion(request, habitacion_id):
-    if request.method == 'POST':
-        habitacion = get_object_or_404(Habitacion, id=habitacion_id)
-        # Verifica si el usuario tiene un perfil de cliente o administrador
-        try:
-            cliente = request.user.cliente
-        except Cliente.DoesNotExist:
-            try:
-                cliente = request.user.administrador
-            except Administrador.DoesNotExist:
-                messages.error(request, 'No tienes un perfil de cliente o administrador asociado.')
-                return redirect('detalle_habitacion', habitacion_id=habitacion_id)
-
-        metodo_pago = request.POST.get('metodo_pago')
-        fecha_inicio = request.POST.get('fecha_inicio')
-        fecha_fin = request.POST.get('fecha_fin')
-
-        # Convertir las fechas del formulario en objetos de tipo date
-        fecha_inicio_obj = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
-        fecha_fin_obj = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
-
-        # Calcular el número total de días de la reserva
-        total_dias = (fecha_fin_obj - fecha_inicio_obj).days
-
-        # Crear la reserva en la base de datos
-        nueva_reserva = Reserva.objects.create(
-            reserva_fecha=timezone.now().date(),
-            reserva_fecha_inicio=fecha_inicio_obj,
-            reserva_fecha_fin=fecha_fin_obj,
-            reserva_total_dias=total_dias,
-            reserva_estado='Confirmada',
-            usuario=request.user,  # Cambié aquí a 'usuario'
-            habitacion=habitacion,
-            tipo_pago=metodo_pago
-        )
-
-        # Redirigir al historial de reservas o a otra página que consideres adecuada
-        return redirect('historial_reservas')
-
-    return redirect('detalle_habitacion', habitacion_id=habitacion_id)
-
-
-@login_required
-def historial_reservas(request):
-    # Obtén el cliente asociado al usuario actual
-    try:
-        cliente = request.user.cliente  # Esto asume que ya has configurado la relación correctamente
-        reservas = Reserva.objects.filter(cliente=cliente)
-    except Cliente.DoesNotExist:
-        reservas = []  # Si no existe, puedes manejarlo de la forma que desees
-
-    return render(request, 'core/clientes/historial_reservas.html', {'reservas': reservas})
