@@ -1,19 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}"> <!-- Cargar el archivo CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome -->
     <title>Administrar Habitaciones</title>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Administrar  Habitaciones</h1>
-        <a href="{% url 'adminrf_habitacion_create' %}" class="btn btn-primary">Nueva Habitación</a>
-        <table class="table mt-3">
-            <thead>
+
+    <img src="{% static 'img/reffbook_logo.png' %}" alt="Reffbook Logo" class="logo">
+
+
+        <div class="header">
+            <h1 class="display-4">
+                <i class="fas fa-bed"></i> Administrar Habitaciones
+            </h1>
+            <p class="lead">Gestiona las habitaciones del hotel</p>
+        </div>
+        
+        <div class="container mt-5">
+        <a href="{% url 'adminrf_habitacion_create' %}" class="btn btn-custom mb-3">
+            <i class="fas fa-plus-circle"></i> Nueva Habitación
+        </a>
+
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
                 <tr>
                     <th>Número</th>
                     <th>Categoría</th>
@@ -32,15 +46,21 @@
                     <td>{{ habitacion.habitacion_precio }}</td>
                     <td>{{ habitacion.hotel.hotel_nombre }}</td>
                     <td>
-                        <a href="{% url 'adminrf_habitacion_update' habitacion.pk %}" class="btn btn-warning">Editar</a>
-                        <button class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal" data-id="{{ habitacion.pk }}">Eliminar</button>
+                        <a href="{% url 'adminrf_habitacion_update' habitacion.pk %}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal" data-id="{{ habitacion.pk }}">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+    <!-- Modal de confirmación para eliminación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -65,12 +85,13 @@
 
     <script>
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Botón que activó el modal
-            var habitacionId = button.data('id') // Extraer la información del atributo data-id
-            var form = $('#deleteForm') // El formulario de eliminación
-            form.attr('action', '/admin/habitaciones/eliminar/' + habitacionId + '/') // Cambiar la acción del formulario
-        })
+            var button = $(event.relatedTarget);
+            var habitacionId = button.data('id');
+            var form = $('#deleteForm');
+            form.attr('action', '/admin/habitaciones/eliminar/' + habitacionId + '/');
+        });
     </script>
 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

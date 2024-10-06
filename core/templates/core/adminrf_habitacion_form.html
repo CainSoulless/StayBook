@@ -1,52 +1,74 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}"> <!-- Archivo CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome -->
+    <title>{% if form.instance.pk %}Editar Habitación{% else %}Nueva Habitación{% endif %}</title>
+</head>
+<body>
 
-{% block title %}
-    {% if form.instance.pk %}
-        Editar Habitación
-    {% else %}
-        Nueva Habitación
-    {% endif %}
-{% endblock %}
+    <!-- Logo del hotel en la esquina superior -->
+    <img src="{% static 'img/reffbook_logo.png' %}" alt="Reffbook Logo" class="logo">
 
-{% block content %}
-<div class="container mt-5">
-    <h1 class="text-center mb-4">{% if form.instance.pk %}Editar Habitación{% else %}Nueva Habitación{% endif %}</h1>
-    
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form method="POST">
-                {% csrf_token %}
-                
-                <div class="mb-3">
-                    <label for="{{ form.habitacion_numero.id_for_label }}" class="form-label">Número de Habitación</label>
-                    {{ form.habitacion_numero }}  <!-- Renderiza el campo directamente -->
-                    {% for error in form.habitacion_numero.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-bed"></i> {% if form.instance.pk %}Editar Habitación{% else %}Nueva Habitación{% endif %}
+        </h1>
 
-                <div class="mb-3">
-                    <label for="{{ form.habitacion_categoria.id_for_label }}" class="form-label">Categoría de Habitación</label>
-                    {{ form.habitacion_categoria }}  <!-- Renderiza el campo directamente -->
-                    {% for error in form.habitacion_categoria.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
 
-                <div class="mb-3">
-                    <label for="{{ form.habitacion_precio.id_for_label }}" class="form-label">Precio</label>
-                    {{ form.habitacion_precio }}  <!-- Renderiza el campo directamente -->
-                    {% for error in form.habitacion_precio.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
+                    <div class="mb-3">
+                        <label for="{{ form.habitacion_numero.id_for_label }}" class="form-label">Número de Habitación</label>
+                        {{ form.habitacion_numero }}
+                        {% for error in form.habitacion_numero.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
-                <div class="d-flex justify-content-between mt-3">
-                    <button type="submit" class="btn btn-success">Guardar</button>
-                    <a href="{% url 'adminrf_habitacion_list' %}" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
+                    <div class="mb-3">
+                        <label for="{{ form.habitacion_categoria.id_for_label }}" class="form-label">Categoría de Habitación</label>
+                        {{ form.habitacion_categoria }}
+                        {% for error in form.habitacion_categoria.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.habitacion_precio.id_for_label }}" class="form-label">Precio</label>
+                        {{ form.habitacion_precio }}
+                        {% for error in form.habitacion_precio.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.habitacion_descripcion.id_for_label }}" class="form-label">Descripción</label>
+                        {{ form.habitacion_descripcion }}
+                        {% for error in form.habitacion_descripcion.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                        <a href="{% url 'adminrf_habitacion_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
