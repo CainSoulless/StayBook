@@ -19,8 +19,19 @@
             <img class="img-fluid rounded-circle" src="{% static 'img/idioma_ingles.png' %}" alt="Inglés" width="150" height="150">
         </a>
     </div>
+
+    <div class="container-fluid">
+        <div class="p-5">
+            <div class="mt-5">
+                <a href="{% url 'adminrf_home' %}" class="btn btn-secondary btn-lg">
+                    Administración del Hotel
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
 
 {% block extra_css %}
 <style>
