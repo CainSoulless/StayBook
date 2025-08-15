@@ -27,7 +27,9 @@ SECRET_KEY = 'django-insecure-p-uh%+f&+wtdxh(a6s_s1^0_aat&syf@b2jjd15_4*b9m)ae4x
 DEBUG = True
 
 # ALLOWED_HOSTS = ['reffbook-db1c4766b71e.herokuapp.com', 'localhost']
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
 
 
 # Application definition
