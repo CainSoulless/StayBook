@@ -286,12 +286,12 @@ def procesar_reserva(request):
 
     return render(request, 'core/reserva_habitacion.html')
 
-@login_required
+#@login_required
 def lista_habitaciones(request):
     habitaciones = Habitacion.objects.all()
     return render(request, 'core/lista_habitaciones.html', {'habitaciones': habitaciones})
 
-@login_required
+#@login_required
 def detalle_habitacion(request, habitacion_id):
     habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
     return render(request, 'core/detalle_habitacion.html', {'habitacion': habitacion})
