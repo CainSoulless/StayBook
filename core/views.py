@@ -10,8 +10,8 @@ from django.utils import timezone
 
 def landing_page(request):
     """Redirige a cliente_home si el usuario está autenticado."""
-    if request.user.is_authenticated:
-        return redirect('cliente_home')
+    #if request.user.is_authenticated:
+    #    return redirect('cliente_home')
     return render(request, 'core/landing_page.html')
 
 def inicio_sesion(request):

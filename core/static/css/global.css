@@ -1,19 +1,77 @@
-/* Establecer color de fondo global para todo el sitio */
-body {
-    background-color: #0c3a4d; /* Color de fondo que quieres usar */
-    color: white; /* Cambia el color del texto para que sea legible en el fondo oscuro */
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
+/* =========================
+   NAVBAR ESTILO DARK ELEGANTE
+   ========================= */
+.custom-navbar {
+    background-color: #09425c; /* mismo tono que el fondo global */
+    padding: 0.8rem 1rem;
+}
+
+.custom-navbar .navbar-brand .brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff !important; /* texto blanco */
+    letter-spacing: 1px;
+}
+
+.custom-navbar .nav-link {
+    color: #ffffff !important; /* links blancos */
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-left: 1rem;
+    transition: color 0.3s ease-in-out, transform 0.2s ease;
+}
+
+.custom-navbar .nav-link:hover {
+    color: #ffc107 !important; /* hover dorado */
+    transform: translateY(-2px);
+}
+
+/* Botón cerrar sesión (rojo) */
+.custom-navbar .logout-btn {
+    color: #ff4d4d !important;
+    font-weight: 600;
+    border: none;
+    background: none;
     padding: 0;
+    cursor: pointer;
 }
 
-/* Asegúrate de que los elementos del formulario y texto se vean bien */
-input, select, textarea {
-    background-color: white;
-    color: #0c3a4d;
+/* Botón registrarse (destacado amarillo) */
+.custom-navbar .register-btn {
+    color: #0c3a4d !important;
+    background: #ffc107;
+    border-radius: 20px;
+    padding: 0.4rem 0.9rem;
+    margin-left: 1rem;
+    transition: background 0.3s ease;
 }
 
-.card, .modal-content {
-    background-color: #f8f9fa;
-    color: black;
+.custom-navbar .register-btn:hover {
+    background: #e0a800;
+    color: #005685 !important;
+}
+
+.site-dark {
+    background-color: #0c3a4d;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+}
+
+.logout-btn {
+    padding: 8;          /* igual que nav-link */
+    margin: 16;          /* igual que nav-link */
+    border: 0 !important;
+    line-height: normal; /* corrige altura */
+}
+
+/* Footer */
+.custom-footer {
+    background-color: #072c3d; /* Azul más oscuro */
+    color: #ffffff;
+    padding: 1rem 0;
+}
+
+.custom-footer p {
+    margin: 0;
+    color: #adb5bd; /* gris clarito */
 }

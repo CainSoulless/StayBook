@@ -10,7 +10,7 @@ from django.contrib import admin
 urlpatterns = [
     # Rutas principales
 
-    path('', lambda req: redirect('landing_page')),
+    path('', lambda req: redirect('lista_habitaciones')),
     path('landing/', views.landing_page, name='landing_page'),
 
     # Autenticación

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Registro - Reffbook
+Registro - StayBook
 {% endblock %}
 
 {% block content %}
@@ -13,6 +13,17 @@ Registro - Reffbook
                     <h3>Crear Cuenta</h3>
                 </div>
                 <div class="card-body">
+
+                    <!-- Bloque de mensajes -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
                     <form method="POST" action="{% url 'registro' %}">
                         {% csrf_token %}
                         <div class="form-group mb-3">
