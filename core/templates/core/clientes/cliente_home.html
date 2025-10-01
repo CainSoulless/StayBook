@@ -1,53 +1,57 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
 {% block title %}
-    Cliente Home - Reffbook
+    Cliente Home - StayBook
 {% endblock %}
 
-<!-- {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/cliente_home.css' %}">
-{% endblock %} -->
-
 {% block content %}
-    <h2 class="text-center mb-4">Bienvenido a Reffbook</h2>
-    <div class="row">
-        <!-- Nueva reserva -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light h-100">
-                <img src="{% static 'img/home1.jpeg' %}" class="card-img-top" alt="Hacer nueva reserva">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Hacer nueva reserva</h5>
-                    <p class="card-text">Realiza una nueva reserva de habitación de forma rápida y sencilla.</p>
-                    <!-- Actualizamos el enlace para redirigir a la lista de habitaciones -->
-                    <a href="{% url 'lista_habitaciones' %}" class="btn btn-primary w-100">Ver Habitaciones</a>
-                </div>
-            </div>
-        </div>
+<!-- Hero corto -->
+<section class="text-center py-5" style="background: #0c3a4d; color: white; border-radius: 0 0 20px 20px;">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Bienvenido a StayBook</h2>
+    <p class="lead">Explora las habitaciones disponibles y realiza tu reserva de manera rápida y sencilla.</p>
+  </div>
+</section>
 
-        <!-- Historial de reservas -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light h-100">
-                <img src="{% static 'img/home2.jpg' %}" class="card-img-top" alt="Historial de reservas">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Ver historial de reservas</h5>
-                    <p class="card-text">Consulta tus reservas anteriores y revisa los detalles.</p>
-                    <a href="{% url 'historial_reservas' %}" class="btn btn-primary w-100">Ver Historial</a>
-                </div>
-            </div>
-        </div>
+<div class="container my-5">
+  <h2 class="text-center mb-5 fw-bold">Habitaciones Disponibles</h2>
 
-        <!-- Modificar datos personales -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light h-100">
-                <img src="{% static 'img/home3.jpg' %}" class="card-img-top" alt="Modificar datos personales">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Modificar datos personales</h5>
-                    <p class="card-text">Actualiza tu información personal para mantenerla al día.</p>
-                    <a href="{% url 'cliente_datos' %}" class="btn btn-primary w-100">Modificar Datos</a>
-                </div>
-            </div>
+  <div class="row">
+    {% for habitacion in habitaciones %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden; transition: transform 0.2s;">
+        
+        <!-- Imagen -->
+        {% if habitacion.imagen %}
+          <img src="{{ habitacion.imagen.url }}" class="card-img-top" alt="Habitación {{ habitacion.numero }}" style="height: 220px; object-fit: cover;">
+        {% else %}
+          <img src="{% static 'img/default.jpg' %}" class="card-img-top" alt="Sin imagen disponible" style="height: 220px; object-fit: cover;">
+        {% endif %}
+
+        <!-- Detalles -->
+        <div class="card-body text-center">
+          <h5 class="card-title fw-bold">Habitación {{ habitacion.numero }}</h5>
+          <p class="card-text text-muted">{{ habitacion.descripcion|truncatewords:15 }}</p>
+          <p class="fs-5 fw-bold" style="color:#0c3a4d;">${{ habitacion.precio }} / noche</p>
+          <a href="{% url 'detalle_habitacion' habitacion.id %}" 
+             class="btn w-100"
+             style="background-color:#e7b10a; color:#0c3a4d; font-weight:600; border-radius:8px;">
+            Reservar
+          </a>
         </div>
+      </div>
     </div>
+    {% empty %}
+      <p class="text-center">No hay habitaciones disponibles en este momento.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Hover effect -->
+<style>
+  .card:hover {
+    transform: translateY(-5px);
+  }
+</style>
 {% endblock %}

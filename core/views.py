@@ -1,18 +1,34 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Cliente, Habitacion, Reserva, Empleado, Administrador
-from .forms import ClienteForm, HabitacionForm, EmpleadoForm
-from datetime import datetime
 from django.utils import timezone
+from datetime import datetime
+
+from .models import Habitacion, Reserva, Hotel, CustomUser
+from .forms import HabitacionForm, ReservaForm, RegistroForm, EmpleadoForm
+
+# Token invitation
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from core.utils.tokens import account_activation_token
+
+# Activación de cuenta
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import login
+
+User = get_user_model()
+
 
 def landing_page(request):
-    """Redirige a cliente_home si el usuario está autenticado."""
-    #if request.user.is_authenticated:
-    #    return redirect('cliente_home')
+    """Landing page."""
     return render(request, 'core/landing_page.html')
+
 
 def inicio_sesion(request):
     """Manejo del inicio de sesión."""
@@ -26,8 +42,9 @@ def inicio_sesion(request):
         messages.error(request, 'Usuario o contraseña incorrectos')
     return render(request, 'core/inicio_sesion.html')
 
+
 def registro(request):
-    """Registro de un nuevo usuario y cliente."""
+    """Registro de un nuevo usuario (cliente)."""
     if request.method == 'POST':
         nombre_completo = request.POST['nombre_completo']
         email = request.POST['email']
@@ -39,8 +56,14 @@ def registro(request):
             return redirect('registro')
 
         try:
-            user = User.objects.create_user(username=email, email=email, password=password1)
-            Cliente.objects.create(usuario=user, cliente_nombre=nombre_completo, cliente_email=email)
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                password=password1,
+                role="cliente"
+            )
+            user.first_name = nombre_completo
+            user.save()
             messages.success(request, "Registro exitoso. Ahora puedes iniciar sesión.")
             return redirect('login')
         except Exception:
@@ -49,31 +72,32 @@ def registro(request):
 
     return render(request, 'registration/registro.html')
 
-@login_required
+
+#@login_required
 def cliente_home(request):
     """Página principal para clientes."""
-    return render(request, 'core/clientes/cliente_home.html')
+    habitaciones = Habitacion.objects.all()
+    return render(request, 'core/clientes/cliente_home.html', {
+        'habitaciones': habitaciones
+    })
+
 
 @login_required
 def cliente_datos(request):
     """Muestra los datos del cliente y su última reserva."""
     user = request.user
-    cliente = None
     ultima_reserva = None
-    es_admin = user.is_superuser
+    es_admin = user.is_superuser or user.role == "administrador"
 
-    if not es_admin:
-        try:
-            cliente = user.cliente
-            ultima_reserva = Reserva.objects.filter(usuario=user).order_by('-reserva_fecha').first()
-        except Cliente.DoesNotExist:
-            messages.error(request, "No se encontró información del cliente.")
+    if user.role == "cliente":
+        ultima_reserva = Reserva.objects.filter(cliente=user).order_by('-fecha_creacion').first()
 
     return render(request, 'core/clientes/cliente_datos.html', {
-        'cliente': cliente,
+        'cliente': user if user.role == "cliente" else None,
         'ultima_reserva': ultima_reserva,
         'es_admin': es_admin,
     })
+
 
 @login_required
 def reserva_habitacion(request, habitacion_id):
@@ -81,10 +105,8 @@ def reserva_habitacion(request, habitacion_id):
     habitacion = get_object_or_404(Habitacion, id=habitacion_id)
 
     if request.method == 'POST':
-        try:
-            cliente = request.user.cliente
-        except Cliente.DoesNotExist:
-            messages.error(request, 'No tienes un perfil de cliente asociado.')
+        if request.user.role != "cliente":
+            messages.error(request, 'Solo los clientes pueden reservar.')
             return redirect('detalle_habitacion', habitacion_id=habitacion_id)
 
         metodo_pago = request.POST.get('metodo_pago')
@@ -96,12 +118,11 @@ def reserva_habitacion(request, habitacion_id):
         total_dias = (fecha_fin_obj - fecha_inicio_obj).days
 
         Reserva.objects.create(
-            reserva_fecha=timezone.now().date(),
-            reserva_fecha_inicio=fecha_inicio_obj,
-            reserva_fecha_fin=fecha_fin_obj,
-            reserva_total_dias=total_dias,
-            reserva_estado='Confirmada',
-            usuario=request.user,
+            fecha_inicio=fecha_inicio_obj,
+            fecha_fin=fecha_fin_obj,
+            total_dias=total_dias,
+            estado='Confirmada',
+            cliente=request.user,
             habitacion=habitacion,
             tipo_pago=metodo_pago
         )
@@ -110,31 +131,28 @@ def reserva_habitacion(request, habitacion_id):
 
     return redirect('detalle_habitacion', habitacion_id=habitacion_id)
 
+
 @login_required
 def historial_reservas(request):
     """Muestra el historial de reservas del usuario."""
-    reservas = Reserva.objects.filter(usuario=request.user)
+    reservas = Reserva.objects.filter(cliente=request.user)
     return render(request, 'core/clientes/historial_reservas.html', {'reservas': reservas})
+
+
+# ---------------------- ADMIN VIEWS ----------------------
+
+@login_required
+def adminrf_home(request):
+    """Dashboard de administrador."""
+    return render(request, 'core/admin_panel/adminrf_home.html')
+
 
 # CRUD HABITACIONES
 @login_required
 def adminrf_habitacion_list(request):
-    """Lista todas las habitaciones."""
     habitaciones = Habitacion.objects.all()
-    return render(request, 'core/adminrf_habitacion_list.html', {'habitaciones': habitaciones})
+    return render(request, 'core/admin_panel/adminrf_habitacion_list.html', {'habitaciones': habitaciones})
 
-
-# # # # FUNCIONES ADMINISTRADOR
-
-@login_required
-def adminrf_home(request):
-    return render(request, 'core/adminrf_home.html')
-
-#CRUD HABITACIONES
-
-# def adminrf_habitacion_list(request):
-#     habitaciones = Habitacion.objects.all()
-#     return render(request, 'core/adminrf_habitacion_list.html', {'habitaciones': habitaciones})
 
 @login_required
 def adminrf_habitacion_create(request):
@@ -145,7 +163,8 @@ def adminrf_habitacion_create(request):
             return redirect('adminrf_habitacion_list')
     else:
         form = HabitacionForm()
-    return render(request, 'core/adminrf_habitacion_form.html', {'form': form})
+    return render(request, 'core/admin_panel/adminrf_habitacion_form.html', {'form': form})
+
 
 @login_required
 def adminrf_habitacion_update(request, pk):
@@ -157,96 +176,235 @@ def adminrf_habitacion_update(request, pk):
             return redirect('adminrf_habitacion_list')
     else:
         form = HabitacionForm(instance=habitacion)
-    return render(request, 'core/adminrf_habitacion_form.html', {'form': form})
+    return render(request, 'core/admin_panel/adminrf_habitacion_form.html', {'form': form})
+
 
 @login_required
 def adminrf_habitacion_delete(request, pk):
     habitacion = get_object_or_404(Habitacion, pk=pk)
     if request.method == 'POST':
         habitacion.delete()
-        return redirect('adminrf_habitacion_list')
+        return redirect('core/admin_panel/adminrf_habitacion_list')
 
-#CRUD CLIENTES
+
+# ---------------------- GENERAL VIEWS ----------------------
+
+def lista_habitaciones(request):
+    habitaciones = Habitacion.objects.all()
+    return render(request, 'core/lista_habitaciones.html', {'habitaciones': habitaciones})
+
+
+def detalle_habitacion(request, habitacion_id):
+    habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
+    return render(request, 'core/detalle_habitacion.html', {'habitacion': habitacion})
+
+
+# ---------------------- INVITACIONES ----------------------
+
+def invite_admin(request, hotel_id):
+    """Crea un usuario administrador inactivo y envía invitación por email."""
+    hotel = Hotel.objects.get(id=hotel_id)
+    user = User.objects.create_user(
+        username=hotel.nombre.lower(),
+        email=hotel.correo_contacto,
+        password=None,
+        role="administrador",
+        is_active=False
+    )
+
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = account_activation_token.make_token(user)
+    domain = get_current_site(request).domain
+    activation_link = f"http://{domain}/activate/{uid}/{token}/"
+
+    subject = "Invitación para administrar tu hotel en StayBook"
+    message = render_to_string("emails/invite_admin.html", {
+        'hotel': hotel,
+        'activation_link': activation_link,
+    })
+    send_mail(subject, message, "no-reply@staybook.com", [user.email])
+
+
+def activar_cuenta(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            password1 = request.POST.get('password1')
+            password2 = request.POST.get('password2')
+            if password1 == password2:
+                user.set_password(password1)
+                user.is_active = True
+                user.save()
+                login(request, user)
+                messages.success(request, "Tu cuenta ha sido activada con éxito.")
+                return redirect('adminrf_home')
+            else:
+                messages.error(request, "Las contraseñas no coinciden.")
+        return render(request, 'registration/activar_cuenta.html', {'uidb64': uidb64, 'token': token})
+    else:
+        messages.error(request, "El enlace de activación no es válido o ha expirado.")
+        return redirect('login')
+
+# ======================
+# PANEL ADMIN HOME
+# ======================
+@login_required
+def adminrf_home(request):
+    return render(request, "core/admin_panel/adminrf_home.html")
+
+
+# ======================
+# CRUD HABITACIONES
+# ======================
+@login_required
+def adminrf_habitacion_list(request):
+    habitaciones = Habitacion.objects.all()
+    return render(request, "core/admin_panel/adminrf_habitacion_list.html", {"habitaciones": habitaciones})
+
 
 @login_required
-def adminrf_cliente_list(request):
-    clientes = Cliente.objects.all()
-    return render(request, 'core/adminrf_cliente_list.html', {'clientes': clientes})
+def adminrf_habitacion_create(request):
+    if request.method == "POST":
+        form = HabitacionForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Habitación creada correctamente.")
+            return redirect("admin_panel:habitacion_list")
+    else:
+        form = HabitacionForm()
+    return render(request, "core/admin_panel/adminrf_habitacion_form.html", {"form": form})
+
+
+@login_required
+def adminrf_habitacion_update(request, pk):
+    habitacion = get_object_or_404(Habitacion, pk=pk)
+    if request.method == "POST":
+        form = HabitacionForm(request.POST, request.FILES, instance=habitacion)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Habitación actualizada correctamente.")
+            return redirect("admin_panel:habitacion_list")
+    else:
+        form = HabitacionForm(instance=habitacion)
+    return render(request, "core/admin_panel/adminrf_habitacion_form.html", {"form": form})
+
+
+@login_required
+def adminrf_habitacion_delete(request, pk):
+    habitacion = get_object_or_404(Habitacion, pk=pk)
+    if request.method == "POST":
+        habitacion.delete()
+        messages.success(request, "Habitación eliminada correctamente.")
+        return redirect("admin_panel:habitacion_list")
+    return render(request, "core/admin_panel/adminrf_habitacion_confirm_delete.html", {"habitacion": habitacion})
+
+
+# ======================
+# CRUD CLIENTES (CustomUser con rol cliente)
+# ======================
 
 @login_required
 def adminrf_cliente_create(request):
-    if request.method == 'POST':
-        form = ClienteForm(request.POST)
+    if request.method == "POST":
+        form = RegistroForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('adminrf_cliente_list')
+            cliente = form.save(commit=False)
+            cliente.role = "cliente"  # asignamos rol cliente
+            cliente.save()
+            return redirect("adminrf_cliente_list")
     else:
-        form = ClienteForm()
-    return render(request, 'core/adminrf_cliente_form.html', {'form': form})
+        form = RegistroForm()
+    return render(request, "core/admin_panel/adminrf_cliente_form.html", {"form": form})
 
 @login_required
-def adminrf_cliente_update(request, pk):
-    cliente = get_object_or_404(Cliente, pk=pk)
-    if request.method == 'POST':
-        form = ClienteForm(request.POST, instance=cliente)
-        if form.is_valid():
-            form.save()
-            return redirect('adminrf_cliente_list')
-    else:
-        form = ClienteForm(instance=cliente)
-    return render(request, 'core/adminrf_cliente_form.html', {'form': form})
+def adminrf_cliente_list(request):
+    clientes = CustomUser.objects.filter(role="cliente")
+    return render(request, "core/admin_panel/adminrf_cliente_list.html", {"clientes": clientes})
+
 
 @login_required
 def adminrf_cliente_delete(request, pk):
-    cliente = get_object_or_404(Cliente, pk=pk)
-    if request.method == 'POST':
+    cliente = get_object_or_404(CustomUser, pk=pk, role="cliente")
+    if request.method == "POST":
         cliente.delete()
-        return redirect('adminrf_cliente_list')
-
-#CRUD RESERVAS
+        messages.success(request, "Cliente eliminado correctamente.")
+        return redirect("admin_panel:cliente_list")
+    return render(request, "core/admin_panel/adminrf_cliente_confirm_delete.html", {"cliente": cliente})
 
 @login_required
+def adminrf_cliente_update(request, pk):
+    cliente = get_object_or_404(CustomUser, pk=pk, role="cliente")
+    if request.method == "POST":
+        form = RegistroForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            return redirect("adminrf_cliente_list")
+    else:
+        form = RegistroForm(instance=cliente)
+    return render(request, "core/admin_panel/adminrf_cliente_form.html", {"form": form})
+
+
+
+# ======================
+# CRUD RESERVAS
+# ======================
+@login_required
 def adminrf_reserva_list(request):
-    reservas = Reserva.objects.all()
-    return render(request, 'core/adminrf_reserva_list.html', {'reservas': reservas})
+    reservas = Reserva.objects.select_related("cliente", "habitacion")
+    return render(request, "core/admin_panel/adminrf_reserva_list.html", {"reservas": reservas})
+
 
 @login_required
 def adminrf_reserva_create(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ReservaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('adminrf_reserva_list')
+            messages.success(request, "Reserva creada correctamente.")
+            return redirect("admin_panel:reserva_list")
     else:
         form = ReservaForm()
-    return render(request, 'core/adminrf_reserva_form.html', {'form': form})
+    return render(request, "core/admin_panel/adminrf_reserva_form.html", {"form": form})
+
 
 @login_required
 def adminrf_reserva_update(request, pk):
     reserva = get_object_or_404(Reserva, pk=pk)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ReservaForm(request.POST, instance=reserva)
         if form.is_valid():
             form.save()
-            return redirect('adminrf_reserva_list')
+            messages.success(request, "Reserva actualizada correctamente.")
+            return redirect("admin_panel:reserva_list")
     else:
         form = ReservaForm(instance=reserva)
-    return render(request, 'core/adminrf_reserva_form.html', {'form': form})
+    return render(request, "core/admin_panel/adminrf_reserva_form.html", {"form": form})
+
 
 @login_required
 def adminrf_reserva_delete(request, pk):
     reserva = get_object_or_404(Reserva, pk=pk)
-    if request.method == 'POST':
+    if request.method == "POST":
         reserva.delete()
-        return redirect('adminrf_reserva_list')
+        messages.success(request, "Reserva eliminada correctamente.")
+        return redirect("admin_panel:reserva_list")
+    return render(request, "core/admin_panel/adminrf_reserva_confirm_delete.html", {"reserva": reserva})
 
-#CRUD EMPLEADOS
 
+# ======================
+# CRUD EMPLEADOS (CustomUser con rol empleado)
+# ======================
 @login_required
 def adminrf_empleado_list(request):
-    empleados = Empleado.objects.all()
-    return render(request, 'core/adminrf_empleado_list.html', {'empleados': empleados})
+    empleados = CustomUser.objects.filter(role="empleado")
+    return render(request, "core/admin_panel/adminrf_empleado_list.html", {"empleados": empleados})
 
+# CREAR EMPLEADO
 @login_required
 def adminrf_empleado_create(request):
     if request.method == 'POST':
@@ -256,42 +414,27 @@ def adminrf_empleado_create(request):
             return redirect('adminrf_empleado_list')
     else:
         form = EmpleadoForm()
-    return render(request, 'core/adminrf_empleado_form.html', {'form': form})
+    return render(request, 'core/admin_panel/adminrf_empleado_form.html', {'form': form})
 
+
+# ACTUALIZAR EMPLEADO
 @login_required
 def adminrf_empleado_update(request, pk):
-    empleado = get_object_or_404(Empleado, pk=pk)
-    if request.method == 'POST':
-        form = EmpleadoForm(request.POST, instance=empleado)
+    empleado = get_object_or_404(CustomUser, pk=pk, role="empleado")
+    if request.method == "POST":
+        form = RegistroForm(request.POST, instance=empleado)
         if form.is_valid():
             form.save()
-            return redirect('adminrf_empleado_list')
+            return redirect("adminrf_empleado_list")
     else:
-        form = EmpleadoForm(instance=empleado)
-    return render(request, 'core/adminrf_empleado_form.html', {'form': form})
+        form = RegistroForm(instance=empleado)
+    return render(request, "core/admin_panel/adminrf_empleado_form.html", {"form": form})
 
+# ELIMINAR EMPLEADO
 @login_required
 def adminrf_empleado_delete(request, pk):
-    empleado = get_object_or_404(Empleado, pk=pk)
-    if request.method == 'POST':
+    empleado = get_object_or_404(CustomUser, pk=pk, role="empleado")
+    if request.method == "POST":
         empleado.delete()
-        return redirect('adminrf_empleado_list')
-
-@login_required
-def procesar_reserva(request):
-    if request.method == 'POST':
-        # Aquí procesas el formulario de reserva
-        # Si todo está bien, puedes redirigir a otra página
-        return redirect('cliente_home')  # O donde quieras redirigir después de la reserva
-
-    return render(request, 'core/reserva_habitacion.html')
-
-#@login_required
-def lista_habitaciones(request):
-    habitaciones = Habitacion.objects.all()
-    return render(request, 'core/lista_habitaciones.html', {'habitaciones': habitaciones})
-
-#@login_required
-def detalle_habitacion(request, habitacion_id):
-    habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
-    return render(request, 'core/detalle_habitacion.html', {'habitacion': habitacion})
+        return redirect("adminrf_empleado_list")
+    return render(request, "core/admin_panel/adminrf_empleado_confirm_delete.html", {"empleado": empleado})

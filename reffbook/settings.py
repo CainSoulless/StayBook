@@ -126,6 +126,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'core/static',
+    # BASE_DIR / "core" / "static",  # <- esta línea importante
+
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -141,3 +143,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_REDIRECT_URL = 'cliente_home' 
+
+AUTH_USER_MODEL = 'core.CustomUser'

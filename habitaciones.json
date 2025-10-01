@@ -3,19 +3,19 @@
     "model": "core.hotel",
     "pk": 1,
     "fields": {
-      "hotel_nombre": "Hotel ReffBook",
-      "hotel_direccion": "Av. Siempre Viva 123"
+      "nombre": "Hotel StayBook",
+      "direccion": "Av. Siempre Viva 123"
     }
   },
   {
     "model": "core.habitacion",
     "pk": 1,
     "fields": {
-      "habitacion_numero": "101",
-      "habitacion_categoria": "Suite",
-      "habitacion_descripcion": "Suite de lujo con vista al mar y terraza privada.",
-      "habitacion_precio": "120000.00",
-      "habitacion_imagen": "img/habitaciones/101.jpg",
+      "numero": "101",
+      "categoria": "Suite",
+      "descripcion": "Suite de lujo con vista al mar y terraza privada.",
+      "precio": "120000.00",
+      "imagen": "img/habitaciones/101.jpg",
       "hotel": 1
     }
   },
@@ -23,11 +23,11 @@
     "model": "core.habitacion",
     "pk": 2,
     "fields": {
-      "habitacion_numero": "102",
-      "habitacion_categoria": "Doble",
-      "habitacion_descripcion": "Habitación doble con aire acondicionado y minibar.",
-      "habitacion_precio": "85000.00",
-      "habitacion_imagen": "img/habitaciones/102.jpg",
+      "numero": "102",
+      "categoria": "Doble",
+      "descripcion": "Habitación doble con aire acondicionado y minibar.",
+      "precio": "85000.00",
+      "imagen": "img/habitaciones/102.jpg",
       "hotel": 1
     }
   },
@@ -35,11 +35,11 @@
     "model": "core.habitacion",
     "pk": 3,
     "fields": {
-      "habitacion_numero": "103",
-      "habitacion_categoria": "Simple",
-      "habitacion_descripcion": "Habitación simple y económica con TV por cable.",
-      "habitacion_precio": "50000.00",
-      "habitacion_imagen": "img/habitaciones/103.jpg",
+      "numero": "103",
+      "categoria": "Simple",
+      "descripcion": "Habitación simple y económica con TV por cable.",
+      "precio": "50000.00",
+      "imagen": "img/habitaciones/103.jpg",
       "hotel": 1
     }
   },
@@ -47,11 +47,11 @@
     "model": "core.habitacion",
     "pk": 4,
     "fields": {
-      "habitacion_numero": "201",
-      "habitacion_categoria": "Suite Familiar",
-      "habitacion_descripcion": "Amplia suite para 4 personas con kitchenette.",
-      "habitacion_precio": "150000.00",
-      "habitacion_imagen": "img/habitaciones/201.jpg",
+      "numero": "201",
+      "categoria": "Suite Familiar",
+      "descripcion": "Amplia suite para 4 personas con kitchenette.",
+      "precio": "150000.00",
+      "imagen": "img/habitaciones/201.jpg",
       "hotel": 1
     }
   }

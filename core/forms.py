@@ -1,20 +1,61 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from .models import Cliente, Habitacion, Reserva, Empleado, UserProfile
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import CustomUser, Habitacion, Reserva
 
-class ClienteForm(forms.ModelForm):
+
+# ======================
+# AUTENTICACIÓN
+# ======================
+class RegistroForm(UserCreationForm):
+    role = forms.ChoiceField(choices=CustomUser.USER_TYPES)
+
     class Meta:
-        model = Cliente
-        fields = ['cliente_nombre', 'cliente_apellidos', 'cliente_email', 'cliente_telefono']
+        model = CustomUser
+        fields = ["username", "email", "telefono", "role", "password1", "password2"]
 
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label="Usuario o Email")
+    password = forms.CharField(widget=forms.PasswordInput)
+
+
+# ======================
+# CRUD HABITACIONES
+# ======================
 class HabitacionForm(forms.ModelForm):
     class Meta:
         model = Habitacion
-        fields = ['habitacion_numero', 'habitacion_categoria', 'habitacion_descripcion', 'habitacion_precio', 'hotel']
+        fields = ["numero", "categoria", "descripcion", "precio", "hotel", "imagen"]
 
-class EmpleadoForm(forms.ModelForm):
+
+# ======================
+# CRUD RESERVAS
+# ======================
+class ReservaForm(forms.ModelForm):
     class Meta:
-        model = Empleado
-        fields = ['empleado_nombre', 'empleado_apellidos', 'empleado_rol', 'empleado_email', 'empleado_telefono', 'usuario']
+        model = Reserva
+        fields = ["fecha_inicio", "fecha_fin", "estado", "tipo_pago", "cliente", "habitacion"]
 
+
+# ======================
+# USUARIOS (Cliente / Empleado)
+# ======================
+class ClienteForm(forms.ModelForm):
+    """Formulario para editar clientes (usuarios con role=cliente)."""
+
+    class Meta:
+        model = CustomUser
+        fields = ["username", "email", "telefono"]
+
+
+class EmpleadoForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = 'empleado'  # Forzar rol automáticamente
+        if commit:
+            user.save()
+        return user

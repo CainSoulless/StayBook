@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Editar Empleado{% else %}Nuevo Empleado{% endif %} - StayBook
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                
+                <!-- Header -->
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #0c3a4d, #145369); border-radius: 12px 12px 0 0;">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="fas fa-user-edit me-2"></i>
+                        {% if form.instance.pk %}Editar Empleado{% else %}Nuevo Empleado{% endif %}
+                    </h4>
+                </div>
+
+                <!-- Formulario -->
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.as_p }}
+                        </div>
+                        
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'adminrf_empleado_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn" style="background-color:#e7b10a; color:#0c3a4d; font-weight:600;">
+                                <i class="fas fa-save me-1"></i> Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

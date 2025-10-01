@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Panel de Administración{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="admin-header text-center py-5 mb-5">
+    <div class="container">
+        <h1 class="fw-bold mb-3">Bienvenido, Administrador</h1>
+        <p class="lead">Gestiona fácilmente las operaciones del hotel desde este panel.</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row g-4 justify-content-center">
+
+        <!-- Habitaciones -->
+        <div class="col-md-5">
+            <a href="{% url 'adminrf_habitacion_list' %}" class="dashboard-card">
+                <i class="fas fa-bed"></i>
+                <span>Administrar Habitaciones</span>
+            </a>
+        </div>
+
+        <!-- Reservas -->
+        <div class="col-md-5">
+            <a href="{% url 'adminrf_reserva_list' %}" class="dashboard-card">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Administrar Reservas</span>
+            </a>
+        </div>
+
+        <!-- Empleados -->
+        <div class="col-md-5">
+            <a href="{% url 'adminrf_empleado_list' %}" class="dashboard-card">
+                <i class="fas fa-users"></i>
+                <span>Administrar Empleados</span>
+            </a>
+        </div>
+
+        <!-- Clientes -->
+        <div class="col-md-5">
+            <a href="{% url 'adminrf_cliente_list' %}" class="dashboard-card">
+                <i class="fas fa-user"></i>
+                <span>Administrar Clientes</span>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

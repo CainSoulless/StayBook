@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Página de Inicio</title>
-</head>
-<body>
-    <h1>Bienvenido a Reffbook</h1>
-    <p>Redirigiendo a la página de inicio...</p>
-    <script>
-        setTimeout(function() {
-            window.location.href = "{% url 'landing_page' %}";
-        }, 3000);  // Redirigir después de 3 segundos
-    </script>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero d-flex align-items-center text-white" style="background: linear-gradient(135deg, #0c3a4d, #145369); height: 100vh;">
+  <div class="container text-center">
+    <h1 class="display-4 fw-bold">Bienvenido a StayBook</h1>
+    <p class="lead mb-4">Encuentra y reserva tu habitación ideal de manera rápida y segura.</p>
+    <a href="{% url 'lista_habitaciones' %}" class="btn btn-lg" style="background-color: #e7b10a; color: #0c3a4d; border-radius: 8px; font-weight: 600;">
+      Ver Habitaciones
+    </a>
+  </div>
+</section>
+{% endblock %}

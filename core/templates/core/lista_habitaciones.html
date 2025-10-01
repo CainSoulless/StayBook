@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% load static %} <!-- Esto carga el tag static -->
+{% load static %}
 
 {% block title %}
-    Lista de Habitaciones - Reffbook
+    Lista de Habitaciones - StayBook
 {% endblock %}
 
 {% block content %}
@@ -12,23 +12,32 @@
         <div class="row">
             {% for habitacion in habitaciones %}
             <div class="col-md-4 mb-4">
-                <div class="card border-light shadow-sm h-100">
+                <div class="card border-light shadow-sm h-100" style="border-radius: 15px; overflow: hidden;">
+                    
                     <!-- Cargar la imagen desde el campo de la base de datos -->
-                    {% if habitacion.habitacion_imagen %}
-                        <img src="{{ habitacion.habitacion_imagen.url }}" class="card-img-top" alt="Habitación {{ habitacion.habitacion_numero }}">
+                    {% if habitacion.imagen %}
+                        <img src="{{ habitacion.imagen.url }}" class="card-img-top" alt="Habitación {{ habitacion.numero }}" style="height: 220px; object-fit: cover;">
                     {% else %}
-                        <img src="{% static 'img/default.jpg' %}" class="card-img-top" alt="Sin imagen disponible">
+                        <img src="{% static 'img/default.jpg' %}" class="card-img-top" alt="Sin imagen disponible" style="height: 220px; object-fit: cover;">
                     {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">Habitación {{ habitacion.habitacion_numero }}</h5>
-                        <p class="card-text">{{ habitacion.habitacion_descripcion }}</p>
-                        <p class="card-text"><strong>Precio:</strong> ${{ habitacion.habitacion_precio }}</p>
-                        <a href="{% url 'detalle_habitacion' habitacion.id %}" class="btn btn-primary w-100">Ver Detalles</a>
+                    
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Habitación {{ habitacion.numero }}</h5>
+                        <p class="card-text text-muted">{{ habitacion.descripcion|truncatewords:20 }}</p>
+                        <p class="card-text fs-5 fw-bold" style="color:#0c3a4d;">
+                            ${{ habitacion.precio }} / noche
+                        </p>
+                        <a href="{% url 'detalle_habitacion' habitacion.id %}" 
+                           class="btn w-100"
+                           style="background-color:#e7b10a; color:#0c3a4d; font-weight:600; border-radius:8px;">
+                            Ver Detalles
+                        </a>
                     </div>
                 </div>
             </div>
+            {% empty %}
+                <p class="text-center">No hay habitaciones disponibles en este momento.</p>
             {% endfor %}
         </div>
     </div>
 {% endblock %}
-

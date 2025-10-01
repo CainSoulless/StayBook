@@ -1,26 +1,36 @@
 from django.contrib import admin
-from .models import Cliente, Empleado, Reserva, Habitacion, Hotel, Pago
+from .models import CustomUser, Reserva, Habitacion, Hotel, Pago
 
-@admin.register(Cliente)
-class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('cliente_nombre', 'cliente_apellidos', 'cliente_email', 'cliente_telefono')
 
-@admin.register(Empleado)
-class EmpleadoAdmin(admin.ModelAdmin):
-    list_display = ('empleado_nombre', 'empleado_apellidos', 'empleado_rol', 'empleado_email', 'empleado_telefono')
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'role', 'telefono', 'is_active', 'is_staff')
+    list_filter = ('role', 'is_active', 'is_staff')
+    search_fields = ('username', 'email')
+
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'usuario', 'reserva_fecha', 'reserva_estado', 'tipo_pago')  # Cambiado a 'usuario'
+    list_display = ('id', 'cliente', 'habitacion', 'fecha_inicio', 'fecha_fin', 'estado', 'tipo_pago')
+    list_filter = ('estado', 'tipo_pago', 'habitacion__hotel')
+    search_fields = ('cliente__username', 'habitacion__numero')
+
 
 @admin.register(Habitacion)
 class HabitacionAdmin(admin.ModelAdmin):
-    list_display = ('habitacion_numero', 'habitacion_categoria', 'habitacion_precio', 'hotel')
+    list_display = ('numero', 'categoria', 'precio', 'hotel')
+    list_filter = ('hotel', 'categoria')
+    search_fields = ('numero',)
+
 
 @admin.register(Hotel)
 class HotelAdmin(admin.ModelAdmin):
-    list_display = ('hotel_nombre', 'hotel_direccion')
+    list_display = ('nombre', 'direccion', 'administrador')
+    search_fields = ('nombre', 'direccion')
+
 
 @admin.register(Pago)
 class PagoAdmin(admin.ModelAdmin):
-    list_display = ('pago_fecha', 'pago_monto', 'pago_metodo', 'reserva')
+    list_display = ('fecha', 'monto', 'metodo', 'reserva')
+    list_filter = ('metodo',)
+    search_fields = ('reserva__cliente__username',)
