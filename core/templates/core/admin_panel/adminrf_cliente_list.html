@@ -1,83 +1,106 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}">
-    <title>Clientes - Admin</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-    <img src="{% static 'img/reffbook_logo.png' %}" alt="Reffbook Logo" class="logo">
+{% block title %}Administrar Clientes - StayBook{% endblock %}
 
-    <div class="header">
-        <h1 class="display-4">Lista de Clientes</h1>
-        <p class="lead">Gestiona los clientes registrados en el sistema.</p>
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="text-center py-5 mb-4" style="background-color:#0c3a4d; color:white; border-radius:0 0 20px 20px;">
+    <div class="container">
+        <h1 class="fw-bold mb-3">
+            <i class="bi bi-people-fill me-2"></i> Administrar Clientes
+        </h1>
+        <p class="lead mb-0">Gestiona los clientes registrados en tu hotel.</p>
+    </div>
+</section>
+
+<div class="container mb-5">
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{% url 'adminrf_cliente_create' %}" class="btn text-white shadow-sm px-4 py-2" style="background-color:#0c3a4d;">
+            <i class="bi bi-person-plus me-2"></i> Nuevo Cliente
+        </a>
     </div>
 
-    <div class="container mt-5">
-        <a href="{% url 'adminrf_cliente_create' %}" class="btn btn-custom mb-3">Nuevo Cliente</a>
-        <table class="table table-striped table-bordered table-hover">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cliente in clientes %}
-                <tr>
-                    <td>{{ cliente.cliente_nombre }}</td>
-                    <td>{{ cliente.cliente_apellidos }}</td>
-                    <td>{{ cliente.cliente_email }}</td>
-                    <td>{{ cliente.cliente_telefono }}</td>
-                    <td>
-                        <a href="{% url 'adminrf_cliente_update' cliente.pk %}" class="btn btn-warning">Editar</a>
-                        <button class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal" data-id="{{ cliente.pk }}">Eliminar</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar este cliente?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <form method="POST" id="deleteForm">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </div>
-            </div>
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead style="background-color:#0c3a4d;" class="text-white">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr class="table-row-hover">
+                        <td>{{ cliente.cliente_nombre }}</td>
+                        <td>{{ cliente.cliente_apellidos }}</td>
+                        <td>{{ cliente.cliente_email }}</td>
+                        <td>{{ cliente.cliente_telefono|default:"No registrado" }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'adminrf_cliente_update' cliente.pk %}" class="btn btn-warning btn-sm me-2">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <button class="btn btn-danger btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteModal"
+                                    data-url="{% url 'adminrf_cliente_delete' cliente.pk %}">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            <i class="bi bi-info-circle me-2"></i>No hay clientes registrados.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 
-    <script>
-        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var clienteId = button.data('id');
-            var form = $('#deleteForm');
-            form.attr('action', '/admin/clientes/eliminar/' + clienteId + '/');
-        });
-    </script>
+<!-- Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body text-center py-4">
+              ¿Estás seguro de que deseas eliminar este cliente?
+          </div>
+          <div class="modal-footer border-0">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <form method="POST" id="deleteForm">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock %}
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var modal = document.getElementById("confirmDeleteModal");
+    modal.addEventListener("show.bs.modal", function (event) {
+        var button = event.relatedTarget;
+        var url = button.getAttribute("data-url");
+        var form = document.getElementById("deleteForm");
+        form.action = url;
+    });
+});
+</script>
+{% endblock %}

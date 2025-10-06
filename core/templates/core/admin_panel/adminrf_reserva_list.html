@@ -1,94 +1,115 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome -->
-    <title>Administrar Reservas</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-    <img src="{% static 'img/reffbook_logo.png' %}" alt="Reffbook Logo" class="logo">
+{% block title %}Administrar Reservas - StayBook{% endblock %}
 
-        <h1 class="text-center mb-4">
-            <i class="fas fa-calendar-check"></i> Administrar Reservas
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="admin-header text-center py-5 mb-4">
+    <div class="container">
+        <h1 class="fw-bold mb-3">
+            <i class="fas fa-calendar-check me-2 text-primary"></i> Administrar Reservas
         </h1>
+        <p class="lead">Gestiona y supervisa todas las reservas realizadas en el hotel.</p>
+    </div>
+</section>
 
-        <div class="container mt-5">
-        <div class="d-flex justify-content-end mb-3">
-            <a href="{% url 'adminrf_reserva_create' %}" class="btn btn-success">
-                <i class="fas fa-plus"></i> Agregar Nueva Reserva
-            </a>
-        </div>
-
-        <table class="table table-striped table-hover shadow-sm">
-            <thead class="table-dark">
-                <tr>
-                    <th>Cliente</th>
-                    <th>Habitación</th>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for reserva in reservas %}
-                <tr>
-                    <td>{{ reserva.cliente }}</td>
-                    <td>{{ reserva.habitacion }}</td>
-                    <td>{{ reserva.reserva_fecha_inicio }}</td>
-                    <td>{{ reserva.reserva_fecha_fin }}</td>
-                    <td>{{ reserva.reserva_estado }}</td>
-                    <td>
-                        <a href="{% url 'adminrf_reserva_update' reserva.pk %}" class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal" data-id="{{ reserva.pk }}">
-                            <i class="fas fa-trash-alt"></i> Eliminar
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container mb-5">
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{% url 'adminrf_reserva_create' %}" class="btn btn-primary shadow-sm px-4 py-2">
+            <i class="fas fa-plus me-2"></i> Nueva Reserva
+        </a>
     </div>
 
-    <!-- Modal de confirmación para eliminación -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar esta reserva?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <form method="POST" id="deleteForm">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </div>
-            </div>
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead style="background-color:#0c3a4d;" class="text-white">
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Habitación</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in reservas %}
+                    <tr class="table-row-hover">
+                        <td>{{ reserva.cliente.username }}</td>
+                        <td>{{ reserva.habitacion.numero }} - {{ reserva.habitacion.categoria }}</td>
+                        <td>{{ reserva.fecha_inicio|date:"d/m/Y" }}</td>
+                        <td>{{ reserva.fecha_fin|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if reserva.estado == "Activa" %}
+                                <span class="badge bg-success px-3 py-2">Activa</span>
+                            {% elif reserva.estado == "Cancelada" %}
+                                <span class="badge bg-danger px-3 py-2">Cancelada</span>
+                            {% elif reserva.estado == "Pendiente" %}
+                                <span class="badge bg-warning text-dark px-3 py-2">Pendiente</span>
+                            {% else %}
+                                <span class="badge bg-secondary px-3 py-2">{{ reserva.estado }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'adminrf_reserva_update' reserva.pk %}" class="btn btn-warning btn-sm me-2">
+                                <i class="fas fa-edit">Editar</i>
+                            </a>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-id="{{ reserva.pk }}">
+                                <i class="fas fa-trash-alt">Cancelar</i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            <i class="fas fa-info-circle me-2"></i>No hay reservas registradas.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 
-    <script>
-        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) 
-            var reservaId = button.data('id') 
-            var form = $('#deleteForm') 
-            form.attr('action', '/admin/reservas/eliminar/' + reservaId + '/') 
-        })
-    </script>
+<!-- Modal de confirmación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Confirmar Eliminación</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body text-center py-4">
+              ¿Estás seguro de que deseas eliminar esta reserva?
+          </div>
+          <div class="modal-footer border-0">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <form method="POST" id="deleteForm">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
 
-</body>
-</html>
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var modal = document.getElementById("confirmDeleteModal");
+    modal.addEventListener("show.bs.modal", function (event) {
+        var button = event.relatedTarget;
+        var reservaId = button.getAttribute("data-id");
+        var form = document.getElementById("deleteForm");
+        form.action = "/adminrf/reservas/eliminar/" + reservaId + "/";
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

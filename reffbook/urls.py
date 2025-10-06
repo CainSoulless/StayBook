@@ -1,4 +1,5 @@
 from django.contrib.auth.views import LogoutView
+from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from django.shortcuts import redirect
 from core import views
@@ -12,7 +13,8 @@ urlpatterns = [
     path('landing/', views.landing_page, name='landing_page'),
 
     # Autenticación
-    path('login/', views.inicio_sesion, name='login'),
+    # path('login/', views.inicio_sesion, name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name='core/login.html', redirect_authenticated_user=True), name='login'),
     path('accounts/logout/', LogoutView.as_view(next_page='/landing'), name='logout'),
     path('registro/', views.registro, name='registro'),
 
@@ -23,6 +25,7 @@ urlpatterns = [
     path('habitaciones/', views.lista_habitaciones, name='lista_habitaciones'),
     path('habitacion/<int:habitacion_id>/', views.detalle_habitacion, name='detalle_habitacion'),
     path('reserva/<int:habitacion_id>/', views.reserva_habitacion, name='reserva_habitacion'),
+    path('cliente_home/', views.cliente_home, name='cliente_home'),
 
     # Administración
     path('adminrf_home/', views.adminrf_home, name='adminrf_home'),
@@ -59,6 +62,9 @@ urlpatterns = [
     path('adminrf/empleados/nuevo/', views.adminrf_empleado_create, name='adminrf_empleado_create'),
     path('adminrf/empleados/editar/<int:pk>/', views.adminrf_empleado_update, name='adminrf_empleado_update'),
     path('adminrf/empleados/eliminar/<int:pk>/', views.adminrf_empleado_delete, name='adminrf_empleado_delete'),
+    path('adminrf/hotel/editar/', views.adminrf_hotel_update, name='adminrf_hotel_update'),
+
+
 ]
 
 # Configuración de archivos estáticos en modo DEBUG

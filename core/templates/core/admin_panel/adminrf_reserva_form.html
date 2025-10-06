@@ -1,82 +1,90 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <title>{% if form.instance.pk %}Editar Reserva{% else %}Nueva Reserva{% endif %}</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-    <img src="{% static 'img/reffbook_logo.png' %}" alt="Reffbook Logo" class="logo">
+{% block title %}
+    {% if form.instance.pk %}Editar Reserva{% else %}Nueva Reserva{% endif %} - StayBook
+{% endblock %}
 
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">
-            <i class="fas fa-calendar-check"></i> {% if form.instance.pk %}Editar Reserva{% else %}Nueva Reserva{% endif %}
-        </h1>
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/adminrf_styles.css' %}">
+{% endblock %}
 
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <form method="POST">
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="card shadow border-0 rounded-4">
+            <!-- Encabezado -->
+            <div class="card-header text-white" style="background-color: #0c3a4d; border-radius: 12px 12px 0 0;">
+                <h3 class="mb-0">
+                    <i class="fas fa-calendar-check me-2"></i>
+                    {% if form.instance.pk %}Editar Reserva{% else %}Nueva Reserva{% endif %}
+                </h3>
+            </div>
+
+            <!-- Cuerpo del formulario -->
+            <div class="card-body p-4">
+                <form method="POST" novalidate>
                     {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label for="{{ form.cliente.id_for_label }}" class="form-label">Cliente</label>
-                        {{ form.cliente }}
-                        {% for error in form.cliente.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
+                    <div class="row g-3">
+                        <!-- Cliente -->
+                        <div class="col-md-6">
+                            <label for="{{ form.cliente.id_for_label }}" class="form-label fw-semibold">Cliente</label>
+                            {{ form.cliente }}
+                            {% for error in form.cliente.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Habitación -->
+                        <div class="col-md-6">
+                            <label for="{{ form.habitacion.id_for_label }}" class="form-label fw-semibold">Habitación</label>
+                            {{ form.habitacion }}
+                            {% for error in form.habitacion.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Fecha de Inicio -->
+                        <div class="col-md-6">
+                            <label for="{{ form.fecha_inicio.id_for_label }}" class="form-label fw-semibold">Fecha de Inicio</label>
+                            {{ form.fecha_inicio }}
+                            {% for error in form.fecha_inicio.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Fecha de Fin -->
+                        <div class="col-md-6">
+                            <label for="{{ form.fecha_fin.id_for_label }}" class="form-label fw-semibold">Fecha de Fin</label>
+                            {{ form.fecha_fin }}
+                            {% for error in form.fecha_fin.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="col-md-6">
+                            <label for="{{ form.estado.id_for_label }}" class="form-label fw-semibold">Estado</label>
+                            {{ form.estado }}
+                            {% for error in form.estado.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.habitacion.id_for_label }}" class="form-label">Habitación</label>
-                        {{ form.habitacion }}
-                        {% for error in form.habitacion.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.reserva_fecha_inicio.id_for_label }}" class="form-label">Fecha Inicio</label>
-                        {{ form.reserva_fecha_inicio }}
-                        {% for error in form.reserva_fecha_inicio.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.reserva_fecha_fin.id_for_label }}" class="form-label">Fecha Fin</label>
-                        {{ form.reserva_fecha_fin }}
-                        {% for error in form.reserva_fecha_fin.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.reserva_estado.id_for_label }}" class="form-label">Estado</label>
-                        {{ form.reserva_estado }}
-                        {% for error in form.reserva_estado.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="d-flex justify-content-between mt-3">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fas fa-save"></i> Guardar
-                        </button>
-                        <a href="{% url 'adminrf_reserva_list' %}" class="btn btn-secondary">
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-end mt-4">
+                        <a href="{% url 'adminrf_reserva_list' %}" class="btn btn-outline-secondary me-2">
                             <i class="fas fa-times"></i> Cancelar
                         </a>
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
+</section>
+{% endblock %}

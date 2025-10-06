@@ -2,41 +2,44 @@
 {% load static %}
 
 {% block title %}
-    Cliente Home - StayBook
+    {{ hotel.nombre|default:"StayBook" }} - Habitaciones
 {% endblock %}
 
 {% block content %}
-<!-- Hero corto -->
-<section class="text-center py-5" style="background: #0c3a4d; color: white; border-radius: 0 0 20px 20px;">
+<!-- ======================= HERO BRANDING ======================= -->
+<section class="hero-brand text-center py-5">
   <div class="container">
-    <h2 class="fw-bold mb-3">Bienvenido a StayBook</h2>
+    <!-- {% if hotel and hotel.logo %}
+      <img src="{{ hotel.logo.url }}" alt="{{ hotel.nombre|default:'StayBook' }}" class="hero-logo mb-3">
+    {% else %}
+      <img src="{% static 'img/reffbook_logo.png' %}" alt="StayBook" class="hero-logo mb-3">
+    {% endif %} -->
+
+    <h2 class="fw-bold mb-3">Bienvenido a {{ hotel.nombre|default:"StayBook" }}</h2>
     <p class="lead">Explora las habitaciones disponibles y realiza tu reserva de manera rápida y sencilla.</p>
   </div>
 </section>
 
+<!-- ======================= LISTA DE HABITACIONES ======================= -->
 <div class="container my-5">
   <h2 class="text-center mb-5 fw-bold">Habitaciones Disponibles</h2>
 
   <div class="row">
     {% for habitacion in habitaciones %}
     <div class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden; transition: transform 0.2s;">
-        
-        <!-- Imagen -->
+      <div class="card habitacion-card h-100 shadow-sm border-0">
+
         {% if habitacion.imagen %}
-          <img src="{{ habitacion.imagen.url }}" class="card-img-top" alt="Habitación {{ habitacion.numero }}" style="height: 220px; object-fit: cover;">
+          <img src="{{ habitacion.imagen.url }}" class="card-img-top habitacion-img" alt="Habitación {{ habitacion.numero }}">
         {% else %}
-          <img src="{% static 'img/default.jpg' %}" class="card-img-top" alt="Sin imagen disponible" style="height: 220px; object-fit: cover;">
+          <img src="{% static 'img/default.jpg' %}" class="card-img-top habitacion-img" alt="Sin imagen disponible">
         {% endif %}
 
-        <!-- Detalles -->
         <div class="card-body text-center">
           <h5 class="card-title fw-bold">Habitación {{ habitacion.numero }}</h5>
           <p class="card-text text-muted">{{ habitacion.descripcion|truncatewords:15 }}</p>
-          <p class="fs-5 fw-bold" style="color:#0c3a4d;">${{ habitacion.precio }} / noche</p>
-          <a href="{% url 'detalle_habitacion' habitacion.id %}" 
-             class="btn w-100"
-             style="background-color:#e7b10a; color:#0c3a4d; font-weight:600; border-radius:8px;">
+          <p class="precio fw-bold">${{ habitacion.precio }} / noche</p>
+          <a href="{% url 'detalle_habitacion' habitacion.id %}" class="btn reservar-btn w-100">
             Reservar
           </a>
         </div>
@@ -47,11 +50,4 @@
     {% endfor %}
   </div>
 </div>
-
-<!-- Hover effect -->
-<style>
-  .card:hover {
-    transform: translateY(-5px);
-  }
-</style>
 {% endblock %}

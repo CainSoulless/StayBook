@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import CustomUser, Habitacion, Reserva
+from .models import CustomUser, Habitacion, Reserva, Hotel
 
 
 # ======================
@@ -25,8 +25,15 @@ class LoginForm(AuthenticationForm):
 class HabitacionForm(forms.ModelForm):
     class Meta:
         model = Habitacion
-        fields = ["numero", "categoria", "descripcion", "precio", "hotel", "imagen"]
-
+        fields = ['numero', 'categoria', 'descripcion', 'precio', 'hotel', 'imagen']
+        widgets = {
+            'numero': forms.TextInput(attrs={'class': 'form-control'}),
+            'categoria': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'precio': forms.NumberInput(attrs={'class': 'form-control'}),
+            'hotel': forms.Select(attrs={'class': 'form-select'}),
+            'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
 
 # ======================
 # CRUD RESERVAS
@@ -34,7 +41,26 @@ class HabitacionForm(forms.ModelForm):
 class ReservaForm(forms.ModelForm):
     class Meta:
         model = Reserva
-        fields = ["fecha_inicio", "fecha_fin", "estado", "tipo_pago", "cliente", "habitacion"]
+        fields = ['cliente', 'habitacion', 'fecha_inicio', 'fecha_fin', 'estado']
+        widgets = {
+            'cliente': forms.Select(attrs={'class': 'form-select'}),
+            'habitacion': forms.Select(attrs={'class': 'form-select'}),
+            'fecha_inicio': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'form-control',
+                    'placeholder': 'Selecciona una fecha de inicio'
+                }
+            ),
+            'fecha_fin': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'form-control',
+                    'placeholder': 'Selecciona una fecha de fin'
+                }
+            ),
+            'estado': forms.Select(attrs={'class': 'form-select'}),
+        }
 
 
 # ======================
@@ -59,3 +85,20 @@ class EmpleadoForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class HotelForm(forms.ModelForm):
+    class Meta:
+        model = Hotel
+        fields = ["nombre", "direccion", "correo_contacto", "logo"]
+
+# class HotelForm(forms.ModelForm):
+#     class Meta:
+#         model = Hotel
+#         fields = ['nombre', 'direccion', 'logo', 'correo_contacto']
+#         widgets = {
+#             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+#             'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+#             'logo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+#             'correo_contacto': forms.EmailInput(attrs={'class': 'form-control'}),
+#         }

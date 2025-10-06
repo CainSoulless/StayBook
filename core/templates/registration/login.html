@@ -18,16 +18,26 @@ Iniciar Sesión - StayBook
                 </div>
 
                 <div class="card-body p-4">
-                    {% if messages %}
-                        {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                            {{ message }}
+                    <!-- Errores del formulario (LoginView) -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            Usuario o contraseña incorrectos.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
+                    {% endif %}
+
+                    <!-- Mensajes del sistema (para vistas personalizadas) -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                         {% endfor %}
                     {% endif %}
 
-                    <form method="POST">
+                    <!-- Formulario -->
+                    <form method="POST" novalidate>
                         {% csrf_token %}
                         
                         <div class="form-floating mb-3">

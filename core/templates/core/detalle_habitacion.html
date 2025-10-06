@@ -2,68 +2,86 @@
 {% load static %}
 
 {% block title %}
-    Detalle de la Habitación - StayBook
+    Habitación {{ habitacion.numero }} - StayBook
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
-                
-                <!-- Imagen de la habitación -->
-                {% if habitacion.imagen %}
-                    <img src="{{ habitacion.imagen.url }}" class="card-img-top" alt="Habitación {{ habitacion.numero }}" style="height: 300px; object-fit: cover;">
-                {% else %}
-                    <img src="{% static 'img/default.jpg' %}" class="card-img-top" alt="Sin imagen disponible" style="height: 300px; object-fit: cover;">
-                {% endif %}
-                
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">Habitación {{ habitacion.numero }}</h5>
-                    <p class="card-text"><strong>Descripción:</strong> {{ habitacion.descripcion }}</p>
-                    <p class="card-text"><strong>Categoría:</strong> {{ habitacion.categoria }}</p>
-                    <p class="card-text fs-5 fw-bold" style="color:#0c3a4d;">
-                        Precio por noche: ${{ habitacion.precio }}
-                    </p>
-                    
-                    <!-- Botón para abrir modal de pago -->
-                    <button class="btn text-white" style="background-color:#0c3a4d;" data-bs-toggle="modal" data-bs-target="#modalPago">
-                        Reservar esta habitación
-                    </button>
-                </div>
-            </div>
+<section class="text-center py-5" style="background: #0c3a4d; color: white; border-radius: 0 0 20px 20px;">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Habitación {{ habitacion.numero }}</h2>
+    <p class="lead">Explora los detalles y confirma tu reserva</p>
+  </div>
+</section>
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+        <!-- Imagen principal -->
+        {% if habitacion.imagen %}
+          <img src="{{ habitacion.imagen.url }}" alt="Habitación {{ habitacion.numero }}"
+               class="w-100" style="height: 350px; object-fit: cover;">
+        {% else %}
+          <img src="{% static 'img/default.jpg' %}" alt="Sin imagen disponible"
+               class="w-100" style="height: 350px; object-fit: cover;">
+        {% endif %}
+
+        <div class="card-body p-4">
+          <h4 class="fw-bold text-center mb-3" style="color: #0c3a4d;">{{ habitacion.categoria }}</h4>
+          <p class="text-muted mb-3 text-center">{{ habitacion.descripcion|default:"Sin descripción disponible." }}</p>
+          
+          <div class="d-flex justify-content-between align-items-center px-2">
+            <span class="fs-5 fw-bold" style="color: #0c3a4d;">${{ habitacion.precio }} / noche</span>
+            <button class="btn text-white px-4 py-2 rounded-3 shadow-sm"
+                    style="background-color: #0c3a4d;"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalReserva">
+              <i class="bi bi-calendar-check me-2"></i>Reservar
+            </button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<!-- Modal de pago -->
-<div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form method="post" action="{% url 'reserva_habitacion' habitacion.id %}">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="modalPagoLabel">Confirmar Reserva</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Método de pago:</strong></p>
-                    <select name="metodo_pago" class="form-control mb-3">
-                        <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
-                        <option value="PayPal">PayPal</option>
-                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-                    </select>
-
-                    <p><strong>Fechas de estadía:</strong></p>
-                    <input type="date" name="fecha_inicio" class="form-control mb-2" required>
-                    <input type="date" name="fecha_fin" class="form-control" required>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn text-white" style="background-color:#0c3a4d;">Confirmar Reserva</button>
-                </div>
-            </form>
+<!-- Modal de Reserva -->
+<div class="modal fade" id="modalReserva" tabindex="-1" aria-labelledby="modalReservaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      <form method="POST" action="{% url 'reserva_habitacion' habitacion.id %}">
+        {% csrf_token %}
+        <div class="modal-header border-0" style="background-color: #0c3a4d; color: white; border-radius: 15px 15px 0 0;">
+          <h5 class="modal-title fw-bold" id="modalReservaLabel">Confirmar Reserva</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label for="metodo_pago" class="form-label fw-semibold text-secondary">Método de pago</label>
+            <select name="metodo_pago" id="metodo_pago" class="form-select rounded-3">
+              <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+              <option value="PayPal">PayPal</option>
+              <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary">Fechas de estadía</label>
+            <div class="row g-2">
+              <div class="col">
+                <input type="date" name="fecha_inicio" class="form-control rounded-3" required>
+              </div>
+              <div class="col">
+                <input type="date" name="fecha_fin" class="form-control rounded-3" required>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn text-white rounded-3 px-4" style="background-color: #0c3a4d;">Confirmar</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 {% endblock %}

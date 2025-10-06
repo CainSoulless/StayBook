@@ -72,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.hotel_context',
             ],
         },
     },
@@ -142,6 +143,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'cliente_home' 
+LOGOUT_REDIRECT_URL = 'login'
 
 AUTH_USER_MODEL = 'core.CustomUser'

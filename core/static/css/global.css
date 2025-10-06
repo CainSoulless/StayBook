@@ -78,3 +78,22 @@
     margin: 0;
     color: #adb5bd; /* gris clarito */
 }
+
+/* =========================
+   BRANDING GLOBAL
+   ========================= */
+.brand-logo {
+    height: 36px;
+    width: auto;
+    border-radius: 6px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2));
+}
+
+.footer-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    opacity: 0.9;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2));
+}

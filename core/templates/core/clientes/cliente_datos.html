@@ -6,61 +6,104 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-center mb-4 fw-bold">Mi Perfil</h2>
-    
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
+<!-- Hero con branding -->
+<section class="text-center py-5" style="background: #0c3a4d; color: white; border-radius: 0 0 20px 20px;">
+  <div class="container">
+    <h2 class="fw-bold mb-2">Mi Perfil</h2>
+    <p class="lead mb-0">Consulta tu información y tus últimas reservas</p>
+  </div>
+</section>
 
-            {% if cliente %}
-                <!-- Card de información del cliente -->
-                <div class="card shadow-lg border-0 rounded-4 mb-4">
-                    <div class="card-header text-white" style="background-color:#0c3a4d; border-radius:12px 12px 0 0;">
-                        <h5 class="mb-0"><i class="bi bi-person-fill me-2"></i>Información del Cliente</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-2"><i class="bi bi-person-circle me-2"></i><strong>Nombre:</strong> {{ cliente.cliente_nombre }} {{ cliente.cliente_apellidos }}</p>
-                        <p class="mb-2"><i class="bi bi-envelope-fill me-2"></i><strong>Email:</strong> {{ user.email }}</p>
-                        <p class="mb-0"><i class="bi bi-telephone-fill me-2"></i><strong>Teléfono:</strong> {{ cliente.cliente_telefono|default:"No registrado" }}</p>
-                    </div>
-                </div>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
 
-                <!-- Card de última reserva -->
-                {% if ultima_reserva %}
-                <div class="card shadow-lg border-0 rounded-4">
-                    <div class="card-header text-white" style="background-color:#0c3a4d; border-radius:12px 12px 0 0;">
-                        <h5 class="mb-0"><i class="bi bi-calendar-check-fill me-2"></i>Última Reserva</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-2"><i class="bi bi-calendar-event me-2"></i><strong>Fecha de Inicio:</strong> {{ ultima_reserva.reserva_fecha_inicio }}</p>
-                        <p class="mb-2"><i class="bi bi-calendar-event me-2"></i><strong>Fecha de Fin:</strong> {{ ultima_reserva.reserva_fecha_fin }}</p>
-                        <p class="mb-0"><i class="bi bi-info-circle-fill me-2"></i><strong>Estado:</strong> {{ ultima_reserva.reserva_estado }}</p>
-                    </div>
-                </div>
-                {% else %}
-                <div class="alert alert-info text-center shadow-sm rounded-3">
-                    <i class="bi bi-info-circle me-2"></i>No tienes reservas realizadas.
-                </div>
-                {% endif %}
-
-            {% elif es_admin %}
-                <div class="card shadow-lg border-0 rounded-4">
-                    <div class="card-body text-center">
-                        <h5 class="fw-bold text-success mb-3"><i class="bi bi-shield-lock-fill me-2"></i>Eres un administrador</h5>
-                        <p>Puedes gestionar la aplicación desde el panel de administración.</p>
-                        <a href="{% url 'adminrf_home' %}" class="btn text-white" style="background-color:#0c3a4d;">
-                            Ir al Panel de Administración
-                        </a>
-
-                    </div>
-                </div>
-
-            {% else %}
-                <div class="alert alert-danger text-center shadow-sm rounded-3">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>No se encontró información del cliente.
-                </div>
-            {% endif %}
+      {% if cliente %}
+        <!-- Información del cliente -->
+        <div class="card shadow-lg border-0 rounded-4 mb-4 overflow-hidden">
+          <div class="card-header text-white d-flex align-items-center" style="background-color:#0c3a4d;">
+            <i class="bi bi-person-fill me-2 fs-5"></i>
+            <h5 class="mb-0 fw-semibold">Información del Cliente</h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="row mb-2">
+              <div class="col-md-6 mb-2">
+                <p class="mb-0"><strong><i class="bi bi-person-circle me-2"></i>Nombre:</strong></p>
+                <p>{{ cliente.cliente_nombre }} {{ cliente.cliente_apellidos }}</p>
+              </div>
+              <div class="col-md-6 mb-2">
+                <p class="mb-0"><strong><i class="bi bi-envelope-fill me-2"></i>Email:</strong></p>
+                <p>{{ user.email }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p class="mb-0"><strong><i class="bi bi-telephone-fill me-2"></i>Teléfono:</strong></p>
+                <p>{{ cliente.cliente_telefono|default:"No registrado" }}</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Última reserva -->
+        {% if ultima_reserva %}
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+          <div class="card-header text-white d-flex align-items-center" style="background-color:#0c3a4d;">
+            <i class="bi bi-calendar-check-fill me-2 fs-5"></i>
+            <h5 class="mb-0 fw-semibold">Última Reserva</h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <p class="mb-1 fw-semibold text-muted"><i class="bi bi-calendar-event me-2"></i>Fecha de Inicio</p>
+                <p>{{ ultima_reserva.fecha_inicio }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <p class="mb-1 fw-semibold text-muted"><i class="bi bi-calendar-event me-2"></i>Fecha de Fin</p>
+                <p>{{ ultima_reserva.fecha_fin }}</p>
+              </div>
+            </div>
+            <p class="fw-semibold text-muted mb-1"><i class="bi bi-info-circle-fill me-2"></i>Estado</p>
+            {% if ultima_reserva.estado == 'Confirmada' %}
+              <span class="badge bg-success fs-6">Confirmada</span>
+            {% elif ultima_reserva.estado == 'Pendiente' %}
+              <span class="badge bg-warning text-dark fs-6">Pendiente</span>
+            {% elif ultima_reserva.estado == 'Cancelada' %}
+              <span class="badge bg-danger fs-6">Cancelada</span>
+            {% else %}
+              <span class="badge bg-secondary fs-6">{{ ultima_reserva.estado }}</span>
+            {% endif %}
+          </div>
+        </div>
+        {% else %}
+          <div class="text-center mt-5">
+            <div class="alert alert-info py-4 px-3 shadow-sm rounded-4 d-inline-block" style="max-width: 500px;">
+              <i class="bi bi-info-circle-fill me-2"></i>No tienes reservas registradas aún.
+            </div>
+          </div>
+        {% endif %}
+
+      {% elif es_admin %}
+        <!-- Vista para administradores -->
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+          <div class="card-body text-center py-5">
+            <i class="bi bi-shield-lock-fill text-success fs-1 mb-3"></i>
+            <h4 class="fw-bold mb-3 text-success">Eres un administrador</h4>
+            <p class="text-muted mb-4">Puedes gestionar los hoteles, habitaciones y usuarios desde el panel de administración.</p>
+            <a href="{% url 'adminrf_home' %}" class="btn text-white rounded-3 px-4 py-2" style="background-color:#0c3a4d;">
+              <i class="bi bi-gear-fill me-2"></i>Ir al Panel de Administración
+            </a>
+          </div>
+        </div>
+
+      {% else %}
+        <div class="text-center mt-5">
+          <div class="alert alert-danger py-4 px-3 shadow-sm rounded-4 d-inline-block" style="max-width: 500px;">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>No se encontró información del cliente.
+          </div>
+        </div>
+      {% endif %}
     </div>
+  </div>
 </div>
 {% endblock %}

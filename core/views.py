@@ -6,7 +6,7 @@ from django.utils import timezone
 from datetime import datetime
 
 from .models import Habitacion, Reserva, Hotel, CustomUser
-from .forms import HabitacionForm, ReservaForm, RegistroForm, EmpleadoForm
+from .forms import HabitacionForm, ReservaForm, RegistroForm, EmpleadoForm, HotelForm
 
 # Token invitation
 from django.core.mail import send_mail
@@ -31,7 +31,6 @@ def landing_page(request):
 
 
 def inicio_sesion(request):
-    """Manejo del inicio de sesión."""
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -39,8 +38,11 @@ def inicio_sesion(request):
         if user is not None:
             login(request, user)
             return redirect('cliente_home')
-        messages.error(request, 'Usuario o contraseña incorrectos')
-    return render(request, 'core/inicio_sesion.html')
+        else:
+            messages.error(request, "Usuario o contraseña incorrectos.")
+            return redirect('login')
+    # return render(request, 'core/login.html')
+    return redirect("registration/login.html")
 
 
 def registro(request):
@@ -75,10 +77,13 @@ def registro(request):
 
 #@login_required
 def cliente_home(request):
-    """Página principal para clientes."""
-    habitaciones = Habitacion.objects.all()
+    hotel = Hotel.objects.first()
+    if not hotel:
+        return render(request, 'core/error_no_hotel.html')
+    habitaciones = Habitacion.objects.filter(hotel=hotel)
     return render(request, 'core/clientes/cliente_home.html', {
-        'habitaciones': habitaciones
+        'hotel': hotel,
+        'habitaciones': habitaciones,
     })
 
 
@@ -438,3 +443,42 @@ def adminrf_empleado_delete(request, pk):
         empleado.delete()
         return redirect("adminrf_empleado_list")
     return render(request, "core/admin_panel/adminrf_empleado_confirm_delete.html", {"empleado": empleado})
+
+@login_required
+def adminrf_hotel_update(request):
+    """Permite al administrador crear o editar su hotel directamente."""
+    user = request.user
+    print(f"[DEBUG] Usuario: {user.username}, Rol: '{user.role}'")
+
+    # Solo administradores pueden acceder
+    if user.role.strip().lower() != "administrador":
+        return redirect("adminrf_home")
+
+    # Buscar el hotel asociado o crear uno nuevo asignado al usuario
+    hotel = Hotel.objects.filter(administrador=user).first()
+
+    if not hotel:
+        # Si el usuario no tiene hotel asignado, intenta recuperar alguno sin administrador
+        hotel = Hotel.objects.filter(administrador__isnull=True).first()
+        if hotel:
+            hotel.administrador = user
+            hotel.save()
+            print("[DEBUG] Se asignó hotel existente al administrador.")
+        else:
+            hotel = Hotel.objects.create(administrador=user, nombre="Nuevo Hotel")
+            print("[DEBUG] No había hotel, se creó uno nuevo.")
+
+    # Procesar formulario
+    if request.method == "POST":
+        form = HotelForm(request.POST, request.FILES, instance=hotel)
+        if form.is_valid():
+            form.instance.administrador = user
+            form.save()
+            print("[DEBUG] Hotel actualizado correctamente.")
+            return redirect("adminrf_home")
+        else:
+            print("[DEBUG] Errores en el formulario:", form.errors)
+    else:
+        form = HotelForm(instance=hotel)
+
+    return render(request, "core/admin_panel/adminrf_hotel_form.html", {"form": form})

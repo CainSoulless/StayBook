@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Editar Datos del Hotel{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Encabezado -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-hotel me-2"></i> Editar Datos del Hotel
+        </h2>
+        <p>Modifica la información básica de tu hotel</p>
+    </div>
+
+    <!-- Card con formulario -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+            <form method="POST" enctype="multipart/form-data" class="row g-3">
+                {% csrf_token %}
+
+                <!-- Nombre -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nombre del Hotel</label>
+                    {{ form.nombre }}
+                </div>
+
+                <!-- Dirección -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Dirección</label>
+                    {{ form.direccion }}
+                </div>
+
+                <!-- Correo -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Correo de Contacto</label>
+                    {{ form.correo_contacto }}
+                </div>
+
+                <!-- Logo -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Logo</label>
+                    {{ form.logo }}
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-success me-2 px-4">
+                        <i class="fas fa-save me-1"></i> Guardar
+                    </button>
+                    <a href="{% url 'adminrf_home' %}" class="btn btn-outline-secondary px-4">
+                        <i class="fas fa-times me-1"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
